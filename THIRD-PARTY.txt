@@ -1,0 +1,81 @@
+This document contains the list of Third Party Software along with the license information.
+
+Third Party Software may impose additional restrictions and it is the user's responsibility to ensure that they have met the licensing
+requirements of the relevant license of the Third Party Software they are using.
+
+//-----//
+jackson-databind  - version 2.6.4
+Copyright © FasterXML
+jackson-databind is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: http://github.com/FasterXML/jackson
+//-----//
+fongo - version 1.6.5
+Copyright © Fongo contributors
+fondo is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/fakemongo/fongo
+//-----//
+ngsi-client - version 0.1.0
+Copyright © Orange
+ngsi-client is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/Orange-OpenSource/fiware-ngsi-api/ngsi-client
+//-----//
+ngsi-server - version 0.1.0
+Copyright © Orange
+ngsi-server is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/Orange-OpenSource/fiware-ngsi-api/ngsi-server
+//-----//
+Apache Commons Logging - version 1.2
+Apache Commons Logging is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: http://commons.apache.org/proper/commons-logging/
+//-----//
+JUnit - version 4.12
+Copyright © 2002-2016 JUnit
+JUnit is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
+You may download the source code on the following website: http://junit.org
+//-----//
+org.eclipse.paho.client.mqttv3 - version 1.1.0
+Copyright © 2007, Eclipse Foundation, Inc. and its licensors.
+Paho Mqtt V3 is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
+You may download the source code on the following website: http://www.eclipse.org/paho/org.eclipse.paho.client.mqttv3
+//-----//
+Hamcrest All - version 1.3
+Copyright © 2000-2015 www.hamcrest.org
+Hamcrest All is distributed under the terms and conditions of the BSD License 3 (https://opensource.org/licenses/BSD-3-Clause)
+You may download the source code on the following website: https://github.com/hamcrest/JavaHamcrest/
+//-----//
+Mockito - version 1.10.19
+Copyright © 2007 Mockito contributors
+Mockito is distributed under the terms and conditions of the MIT License (http://opensource.org/licenses/MIT).
+You may download the source code on the following website: http://www.mockito.org
+//-----//
+MongoDB Java Driver - version 2.13.0
+Copyright © 2008-2015 MongoDB, Inc
+MongoDB Java Driver is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: http://www.mongodb.org
+//-----//
+SLF4J API Module - version 1.7.7
+Copyright © 2004-2014 QOS.ch
+SLF4J API Module is distributed under the terms and conditions of the MIT License (http://opensource.org/licenses/MIT).
+You may download the source code on the following website: http://www.slf4j.org
+//-----//
+Spring TestContext Framework - version 4.3.0.RELEASE
+Copyright © 2002-2016 the original author or authors.
+Spring Framework is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/spring-projects/spring-framework
+//-----//
+Spring Web - version 4.3.0.RELEASE
+Copyright © 2002-2016 the original author or authors.
+Spring Web is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/spring-projects/spring-framework
+//-----//
+Spring Data MongoDB - Core - version 1.8.4.RELEASE
+Copyright © 2002-2016 the original author or authors.
+Spring Data MongoDB is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: http://projects.spring.io/spring-data-mongodb/spring-data-mongodb
+//-----//
+Servlet API - version 2.5
+Copyright © the original author or authors.
+Servlet API is distributed under the terms and conditions of the CDDL and GPLv2 with classpath exception License (https://glassfish.java.net/public/CDDL+GPL.html).
+You may download the source code on the following website: https://glassfish.java.net
+
+
