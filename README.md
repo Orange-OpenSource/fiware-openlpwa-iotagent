@@ -61,10 +61,10 @@ This is a list of the application properties:
     <tr><td>mongodb.databasename</td><td>MongoDB database name</td><td> fiware-iotagent</td></tr>
     <tr><td>mongodb.username</td><td>MongoDB user name</td><td></td></tr>
     <tr><td>mongodb.password</td><td>MongoDB password</td><td></td></tr>
-    <tr><td>openLpwaProvider.restUrl</td><td>Live Objects®\** API URL</td><td>https://lpwa.liveobjects.orange-business.com</td></tr>
-    <tr><td>openLpwaProvider.apiKey</td><td>Live Objects®\** API key</td><td></td></tr>
-    <tr><td>openLpwaProvider.mqttUri</td><td>Live Objects®\** MQTT broker URI</td><td>tcp://liveobjects.orange-business.com:1883</td></tr>
-    <tr><td>openLpwaProvider.mqttClientId</td><td>Live Objects®\** MQTT broker client identifier</td><td>fiware-iotagent-client</td></tr>
+    <tr><td>openLpwaProvider.restUrl</td><td>Live Objects®** API URL</td><td>https://lpwa.liveobjects.orange-business.com</td></tr>
+    <tr><td>openLpwaProvider.apiKey</td><td>Live Objects®** API key</td><td></td></tr>
+    <tr><td>openLpwaProvider.mqttUri</td><td>Live Objects®** MQTT broker URI</td><td>tcp://liveobjects.orange-business.com:1883</td></tr>
+    <tr><td>openLpwaProvider.mqttClientId</td><td>Live Objects®** MQTT broker client identifier</td><td>fiware-iotagent-client</td></tr>
 </table>
 
 ## <a name="usage"/>Usage
