@@ -237,7 +237,7 @@ When this updateContext request is launched, the IoT agent is triggered and the 
 
 ## <a name="licence"/>License
 
-This project is under the Apache License version 2.0
+This project is under the Apache License version 2.0.
 
 \* brand registered by Semtech Corporation
 \** brand registered by Orange
