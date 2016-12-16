@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/Orange-OpenSource/fiware-openlpwa-iotagent.svg?branch=master)](https://travis-ci.org/Orange-OpenSource/fiware-openlpwa-iotagent)
 [![Hex.pm](https://img.shields.io/hexpm/l/plug.svg)](LICENSE)
+[![GitHub issues](https://img.shields.io/github/issues/badges/shields.svg)](https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent/issues)
 
 # Fiware LoRa®\* IoT Agent
 
