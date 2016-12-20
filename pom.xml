@@ -104,6 +104,15 @@
         </plugins>
     </build>
 
+    <scm>
+        <connection>
+            scm:git:https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent.git
+        </connection>
+        <developerConnection>
+            scm:git:https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent.git
+        </developerConnection>
+        <url>https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent</url>
+    </scm>
     <licenses>
         <license>
             <name>Apache License Version 2.0</name>
