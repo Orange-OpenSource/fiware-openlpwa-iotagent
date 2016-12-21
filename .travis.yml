@@ -2,3 +2,21 @@ sudo: false
 language: java
 jdk:
 - oraclejdk8
+env:
+  global:
+   # The next declaration is the encrypted COVERITY_SCAN_TOKEN, created
+   #   via the "travis encrypt" command using the project repo's public key
+   - secure: "Dhk8b/M8M/Vb/sBp/ATkjKL3sWGlJqPu4fEbstMrJAs6gPycZmMVvpfIoaGh4OFqdUru0qaQwQCIsOiBleJ3miyTahaIEG97sicIPe+IiWEYv9usj2Lch/BdjiLaRwyHNBN/XPgIPKTOQ0cR8VbO1HdM99kd3yaKgamIyGrx9XHZlI+sjqziFYB5aA0WdgiKejmC6C/8w8vFBAwQoEz+6BqB6BW+B9Q83vFTD7FBi7gFYh9Z504sl6ILpGcJQL1HkW0OQMM93TCFr0aVKXKEoCvF3RkoJYeY4Bh1xbrXQZ9ATs2Qt9WA9xaV88ggn6Db1bCeH838a14euyP5RVVWwiTPik3aVgaIx41U0it3ON6BVEnaid5z3Yfi5VROFVUp34gIfGwWNlTJgoPrlpo3gQrHXwyWD/4z+JAbjfldOgCMidJMNapNSfvpygJNFi6BMNcoXazGrA8lzbzh5HNzrGVO63s4GWPOulKBGyE9xU6GH7mh9gh+zeroFIGZzLidVkFLqxtD1fbajK3g+TX8Iq4eoSTQT/HeuQZE2OEi6EHXAfKR7Pc9hanRSFORDekv79m3XpsgLFcqwJZAIxw3wOpV3K+IZIOv5WPdy6bQl8pgUBDANQQoeHZr3lmqWeAuk7rHDcXCzOC0bZjduo1HRjoU/+Mz/S89J12xMm4jm3g="
+
+before_install:
+      - echo -n | openssl s_client -connect scan.coverity.com:443 | sed -ne '/-BEGIN CERTIFICATE-/,/-END CERTIFICATE-/p' | sudo tee -a /etc/ssl/certs/ca-
+
+addons:
+  coverity_scan:
+    project:
+      name: "Orange-OpenSource/fiware-openlpwa-iotagent"
+      description: "Build submitted via Travis CI"
+    notification_email: christophe.azemar@orange.com
+    build_command_prepend: "mvn clean"
+    build_command:   "mvn -DskipTests=true compile"
+    branch_pattern: coverity_scan
