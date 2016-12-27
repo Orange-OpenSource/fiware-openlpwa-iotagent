@@ -173,6 +173,16 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>2.18.1</version>
             </plugin>
+                 
+            <plugin>
+                <groupId>org.eluder.coveralls</groupId>
+                <artifactId>coveralls-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <configuration>
+                    <repoToken>UXo1hhsKHfhFhgtG86gb67DhNbXL53MWe</repoToken>
+                    <sourceEncoding>UTF-8</sourceEncoding>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 
