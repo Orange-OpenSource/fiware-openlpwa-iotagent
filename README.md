@@ -4,7 +4,6 @@
   <img alt="Coverity Scan Build Status"
        src="https://img.shields.io/coverity/scan/11234.svg"/>
 </a>
-[![Coverage Status](https://coveralls.io/repos/github/Orange-OpenSource/fiware-openlpwa-iotagent/badge.svg?branch=master)](https://coveralls.io/github/Orange-OpenSource/fiware-openlpwa-iotagent?branch=master)
 [![GitHub issues](https://img.shields.io/github/issues/Orange-OpenSource/fiware-openlpwa-iotagent.svg)](https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent/issues)
 
 # Fiware LoRa®\* IoT Agent
