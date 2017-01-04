@@ -8,7 +8,7 @@
 
 # Fiware LoRa®\* IoT Agent
 
-This project is a bridge between the Orange LoRa®\* network and the OMA NGSI protocol used by the Orion Context Broker as well as by other components of the FIWARE ecosystem.
+This project is a bridge between the Orange LoRa®\* network and the OMA NGSIv1 protocol used by the Orion Context Broker as well as by other components of the FIWARE ecosystem.
 
 ## <a name="overview"/>Overview
 
