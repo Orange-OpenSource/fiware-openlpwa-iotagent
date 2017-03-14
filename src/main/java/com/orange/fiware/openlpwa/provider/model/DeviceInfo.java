@@ -18,6 +18,7 @@
 
 package com.orange.fiware.openlpwa.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.List;
 /**
  * Device Info in GetDeviceInformation request
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceInfo {
 
     /**

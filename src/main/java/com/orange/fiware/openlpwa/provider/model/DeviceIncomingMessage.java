@@ -18,6 +18,7 @@
 
 package com.orange.fiware.openlpwa.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
@@ -26,6 +27,7 @@ import java.util.List;
 /**
  * Incoming message from MQTT broker for a device
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceIncomingMessage {
 
     private String streamId;
@@ -87,6 +89,7 @@ public class DeviceIncomingMessage {
     /**
      * Incoming message information
      */
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class DeviceIncomingMessageValue {
 
         private Integer port;
@@ -132,6 +135,7 @@ public class DeviceIncomingMessage {
     /**
      * Metadata
      */
+    @JsonIgnoreProperties(ignoreUnknown = true)
     public class DeviceIncomingMessageMetadata {
 
         private String source;

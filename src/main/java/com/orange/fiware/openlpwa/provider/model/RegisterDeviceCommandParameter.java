@@ -18,9 +18,12 @@
 
 package com.orange.fiware.openlpwa.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 /**
  * Parameter of RegisterDeviceCommand request
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class RegisterDeviceCommandParameter {
     
     private String data;

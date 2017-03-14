@@ -18,11 +18,14 @@
 
 package com.orange.fiware.openlpwa.provider.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.Date;
 
 /**
  * Command of a device in the GetDeviceCommands request
  */
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class DeviceCommand {
 
     /**
