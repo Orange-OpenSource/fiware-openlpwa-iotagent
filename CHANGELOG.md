@@ -1,3 +1,9 @@
+# 1.0.2
+
+## Minor features
+
+* Update Jackson mapping for new attributes
+
 # 1.0.1
 
 ## Minor features
