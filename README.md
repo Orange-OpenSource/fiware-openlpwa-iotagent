@@ -39,6 +39,8 @@ Here's the global architecture of the IoT agent using Live Objects®\** platform
 
 ### <a name="maven"/>From Maven
 
+Create a Maven project with Spring Boot dependencies and our library :
+
 ```xml
 <dependency>
     <groupId>com.orange.fiware</groupId>
