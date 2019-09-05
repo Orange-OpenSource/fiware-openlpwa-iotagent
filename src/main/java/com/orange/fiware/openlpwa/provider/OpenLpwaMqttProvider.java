@@ -40,7 +40,7 @@ public class OpenLpwaMqttProvider implements MqttCallback {
 
     private static Logger logger = LoggerFactory.getLogger(OpenLpwaMqttProvider.class);
     private final static String userName = "payload";
-    private final static String topicPath = "router/~event/v1/data/new/urn/lora/#";
+    private final static String topicPath = "router/~event/v1/data/new/typ/+/dev/+/con/lora/evt/+/grp/#";
     private final static int subscribeQOS = 1;
     private String serverUri;
     private String clientId;

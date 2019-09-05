@@ -87,7 +87,7 @@ public class OpenLpwaProvider {
         checkDeviceEUIParameter(deviceEUI);
 
         UriComponentsBuilder componentsBuilder = UriComponentsBuilder.fromUriString(url);
-        componentsBuilder.path(String.format("%1$s/vendors/lora/devices/%2$s", basePath, deviceEUI));
+        componentsBuilder.path(String.format("%1$s/data/streams/urn:lo:nsid:lora:%2$s", basePath, deviceEUI));
         componentsBuilder.build();
 
         return request(HttpMethod.GET, componentsBuilder.toUriString(), null, DeviceInfo.class);
