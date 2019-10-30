@@ -1,18 +1,18 @@
 /**
  * Copyright (C) 2016 Orange
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *          http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * <p>
  * * Created by Christophe AZEMAR on 28/06/2016.
  */
 
@@ -142,33 +142,24 @@ public class Agent {
         try {
             checkDevice(device);
 
-            // First check if the device is registered and activated in OpenLpwa provider
-            checkOpenLpwaProviderRegistration(device,
-                    () -> {
-                        try {
-                            subscribeToCommands(
-                                    device,
-                                    subscriptionId -> {
-                                        // We can save device without subscriptionId if it's only a sensor
-                                        logger.debug("Device correctly registered (EUI: {})", device.getDeviceEUI());
-                                        deviceRepository.save(new DeviceEntity(device, subscriptionId));
-                                        logger.debug("Entity (EUI:{}) save in Mongo database.", device.getDeviceEUI());
-                                        launchSuccessCallback(successCallback);
-                                    },
-                                    ex -> launchFailureCallback(failureCallback, new AgentException(ex.getMessage(), ex))
-                            );
-                        } catch (AgentException e) {
-                            launchFailureCallback(failureCallback, e);
-                        }
-                    },
-                    ex -> {
-                        String errorMsg = String.format("Error while checking OpenLpwa provider registration for device (%s)", device);
-                        logger.error(errorMsg, ex);
-                        launchFailureCallback(failureCallback, new AgentException(errorMsg, ex));
-                    }
-            );
+            try {
+                subscribeToCommands(
+                        device,
+                        subscriptionId -> {
+                            // We can save device without subscriptionId if it's only a sensor
+                            logger.debug("Device correctly registered (ID: {})", device.getDeviceID());
+                            deviceRepository.save(new DeviceEntity(device, subscriptionId));
+                            logger.debug("Entity (ID:{}) save in Mongo database.", device.getDeviceID());
+                            launchSuccessCallback(successCallback);
+                        },
+                        ex -> launchFailureCallback(failureCallback, new AgentException(ex.getMessage(), ex))
+                );
+            } catch (AgentException e) {
+                launchFailureCallback(failureCallback, e);
+            }
+
         } catch (ConfigurationException ex) {
-            String errorMsg = device != null ? String.format("Unable to register the device (%s)", device.getDeviceEUI()) : "Device to register is null";
+            String errorMsg = device != null ? String.format("Unable to register the device (%s)", device.getDeviceID()) : "Device to register is null";
             logger.error(errorMsg, ex);
             launchFailureCallback(failureCallback, new AgentException(errorMsg, ex));
         }
@@ -176,18 +167,18 @@ public class Agent {
 
     /**
      * Unregister a device from the IoT agent
-     * @param deviceEUI         Device EUI to unregister
+     * @param deviceID         Device ID to unregister
      * @param successCallback   Callback called when the device is correctly unregistered
      * @param failureCallback   Callback called when an error occurs
      */
-    public void unregister(String deviceEUI, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
-        DeviceEntity registeredDevice = deviceRepository.findOne(deviceEUI);
+    public void unregister(String deviceID, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
+        DeviceEntity registeredDevice = deviceRepository.findOne(deviceID);
         if (registeredDevice != null) {
             try {
                 unsubscribeToCommands(
                         registeredDevice,
                         () -> {
-                            logger.debug("Device (EUI:{}) deleted.", registeredDevice.getDeviceEUI());
+                            logger.debug("Device (DeviceID:{}) deleted.", registeredDevice.getDeviceID());
                             deviceRepository.delete(registeredDevice);
                             launchSuccessCallback(successCallback);
                         },
@@ -206,10 +197,10 @@ public class Agent {
      * @param device device to validate
      */
     private void checkOpenLpwaProviderRegistration(Device device, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) throws ConfigurationException {
-        logger.debug("Checking device (EUI: {}) registration in OpenLpwa provider", device.getDeviceEUI());
-        openLpwaProvider.getDeviceInformation(device.getDeviceEUI()).addCallback(
+        logger.debug("Checking device (ID: {}) registration in OpenLpwa provider", device.getDeviceID());
+        openLpwaProvider.getDeviceInformation(device.getDeviceID()).addCallback(
                 result -> {
-                    logger.debug("Device (EUI: {}) correctly registered in OpenLpwa provider", device.getDeviceEUI());
+                    logger.debug("Device (ID: {}) correctly registered in OpenLpwa provider", device.getDeviceID());
                     // Returns an error if the device is not activated in OpenLpwa provider
                     Boolean deviceFound = result.getDeviceStatus() == DeviceInfo.DeviceStatus.ACTIVATED;
                     if (deviceFound) {
@@ -219,7 +210,7 @@ public class Agent {
                     }
                 },
                 ex -> {
-                    String errorMsg = String.format("Unable to check if the device (%s) is registered in OpenLpwa provider", device.getDeviceEUI());
+                    String errorMsg = String.format("Unable to check if the device (%s) is registered in OpenLpwa provider", device.getDeviceID());
                     logger.error(errorMsg, ex);
                     launchFailureCallback(failureCallback, new AgentException(errorMsg, ex));
                 }
@@ -239,17 +230,17 @@ public class Agent {
             ngsiManager.subscribeToCommands(device).addCallback(
                     result -> {
                         if (result != null && result.getSubscribeError() == null && result.getSubscribeResponse() != null) {
-                            logger.debug("Device (EUI:{}) correctly subscribed in the NGSI Context Broker ", device.getDeviceEUI());
+                            logger.debug("Device (ID:{}) correctly subscribed in the NGSI Context Broker ", device.getDeviceID());
                             if (successCallback != null) {
                                 successCallback.onSuccess(result.getSubscribeResponse().getSubscriptionId());
                             }
                         } else {
-                            logger.error("Unable to subscribe for device (EUI: {})", device.getDeviceEUI());
+                            logger.error("Unable to subscribe for device (ID: {})", device.getDeviceID());
                             launchFailureCallback(failureCallback, new AgentException("Unable to subscribe in the NGSI Context Broker."));
                         }
                     },
                     ex -> {
-                        String errorMsg = String.format("Unable to subscribe device in the NGSI Context Broker (%s)", device.getDeviceEUI());
+                        String errorMsg = String.format("Unable to subscribe device in the NGSI Context Broker (%s)", device.getDeviceID());
                         logger.error(errorMsg, ex);
                         launchFailureCallback(failureCallback, new AgentException(errorMsg, ex));
                     }
@@ -274,7 +265,7 @@ public class Agent {
             ngsiManager.unsubscribe(device.getSubscriptionId()).addCallback(
                     result -> {
                         if (result != null && result.getStatusCode().getCode().equals(CODE_200.getLabel())) {
-                            logger.debug("DeviceEUI:{} correctly unsubscribe", device);
+                            logger.debug("DeviceID:{} correctly unsubscribe", device);
                             launchSuccessCallback(successCallback);
                         } else {
                             launchFailureCallback(failureCallback, new AgentException("Unable to unsubscribe in the NGSI Context Broker."));
@@ -300,8 +291,8 @@ public class Agent {
         if (device == null) {
             throw new ConfigurationException("device parameter is missing.");
         }
-        if (device.getDeviceEUI() == null) {
-            throw new ConfigurationException("device deviceEUI is missing.");
+        if (device.getDeviceID() == null) {
+            throw new ConfigurationException("device deviceID is missing.");
         }
         if (device.getPort() == null) {
             throw new ConfigurationException("device port is missing.");
@@ -337,13 +328,13 @@ public class Agent {
 
     /**
      * Call a device's command
-     * @param deviceEUI Device EUI
+     * @param deviceID Device ID
      * @param commandName command to launch
      * @param attribute command's attribute
      * @param callback call when command is launched
      */
-    void executeCommand(String deviceEUI, String commandName, ContextAttribute attribute, BiConsumer<Boolean, Date> callback) {
-        DeviceEntity device = deviceRepository.findOne(deviceEUI);
+    void executeCommand(String deviceID, String commandName, ContextAttribute attribute, BiConsumer<Boolean, Date> callback) {
+        DeviceEntity device = deviceRepository.findOne(deviceID);
         if (device == null || converter == null) {
             if (callback != null) {
                 callback.accept(false, new Date());
@@ -351,23 +342,23 @@ public class Agent {
             return;
         }
 
-        String encodedPayload = converter.encodeDataForCommand(deviceEUI, commandName, attribute);
+        String encodedPayload = converter.encodeDataForCommand(deviceID, commandName, attribute);
         if (encodedPayload != null && encodedPayload.length() > 0) {
             RegisterDeviceCommandParameter command = new RegisterDeviceCommandParameter();
             command.setData(encodedPayload);
             command.setPort(device.getPort());
             command.setConfirmed(false);
             try {
-                openLpwaProvider.registerDeviceCommand(device.getDeviceEUI(), command).addCallback(
+                openLpwaProvider.registerDeviceCommand(device.getDeviceID(), command).addCallback(
                         result -> {
-                            logger.debug("Command {} sent to OpenLpwa provider for deviceEUI:{}", commandName, deviceEUI);
+                            logger.debug("Command {} sent to OpenLpwa provider for deviceID:{}", commandName, deviceID);
                             Boolean success = result.getCommandStatus() == DeviceCommand.DeviceCommandStatus.SENT;
                             if (callback != null) {
                                 callback.accept(success, success ? result.getCreationTs() : new Date());
                             }
                         },
                         ex -> {
-                            logger.error("Error sending command {} to OpenLpwa provider for deviceEUI:{}", commandName, deviceEUI, ex);
+                            logger.error("Error sending command {} to OpenLpwa provider for deviceID:{}", commandName, deviceID, ex);
                             if (callback != null) {
                                 callback.accept(false, new Date());
                             }
@@ -380,7 +371,7 @@ public class Agent {
                 }
             }
         } else {
-            logger.warn("Payload is null or empty, command is not sent (deviceEUI:{}, commandName:{}, attribute:{}, encodedPayload:{}", deviceEUI, commandName, attribute, encodedPayload);
+            logger.warn("Payload is null or empty, command is not sent (deviceID:{}, commandName:{}, attribute:{}, encodedPayload:{}", deviceID, commandName, attribute, encodedPayload);
             if (callback != null) {
                 callback.accept(false, new Date());
             }
@@ -437,31 +428,31 @@ public class Agent {
         }
 
         @Override
-        public void newMessageArrived(String deviceEUI, DeviceIncomingMessage incomingMessage) {
-            DeviceEntity device = deviceRepository.findOne(deviceEUI);
+        public void newMessageArrived(String deviceID, DeviceIncomingMessage incomingMessage) {
+            DeviceEntity device = deviceRepository.findOne(deviceID);
             if (device == null) {
-                logger.error("Device not registered, can't treat message (EUI:{})", deviceEUI);
+                logger.error("Device not registered, can't treat message (ID:{})", deviceID);
                 return;
             }
 
             String payload = null;
-            if (incomingMessage != null && incomingMessage.getValue() != null && incomingMessage.getValue().getData() != null) {
-                payload = incomingMessage.getValue().getData();
+            if (incomingMessage != null && incomingMessage.getValue() != null && incomingMessage.getData() != null) {
+                payload = incomingMessage.getData();
             }
             if (payload == null) {
-                logger.error("Payload not found, can't treat message (EUI:{})", deviceEUI);
+                logger.error("Payload not found, can't treat message (ID:{})", deviceID);
                 return;
             }
 
             if (converter != null) {
-                List<ContextAttribute> decodedAttributes = converter.decodeData(device.getDeviceEUI(), payload);
+                List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
                 try {
                     ngsiManager.updateDeviceAttributes(device, decodedAttributes);
                 } catch (AgentException e) {
-                    logger.error("Unable to treat incoming message (EUI:{}, message:{})", deviceEUI, incomingMessage, e);
+                    logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
                 }
             } else {
-                logger.error("Converter is not defined, message is not treated. (EUI:{}, message:{})", deviceEUI, incomingMessage);
+                logger.error("Converter is not defined, message is not treated. (ID:{}, message:{})", deviceID, incomingMessage);
             }
         }
     }

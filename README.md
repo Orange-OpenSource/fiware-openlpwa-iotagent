@@ -100,7 +100,7 @@ To do this job, you must implement `OpenLpwaNgsiConverter` interface with the tw
 ```java
 public class MyOpenLpwaNgsiConverter implements OpenLpwaNgsiConverter {
 @Override
-    public List<ContextAttribute> decodeData(String deviceEUI, String data) {
+    public List<ContextAttribute> decodeData(String deviceID, String data) {
       // Decode the hexadecimal payload to build a list of NGSI context attributes
     }
  ```
@@ -109,7 +109,7 @@ The method `decodeData` is called for each uplink payload sent by a device. You 
 
 ```java
 @Override
-    public String encodeDataForCommand(String deviceEUI, String commandName, ContextAttribute attribute) {
+    public String encodeDataForCommand(String deviceID, String commandName, ContextAttribute attribute) {
         String data = attribute.getValue().toString();
         // Build an hexadecimal payload to send a command
     }
@@ -167,7 +167,7 @@ This is a list of device properties:
 
 <table>
     <tr><th>Name</th><th>Description</th><th>Mandatory/Optional</th></tr>
-    <tr><td>deviceEUI</td><td>end-device ID in IEEE EUI64 address space that identifies the device (cf. LoRaWAN™)</td><td>Mandatory</td></tr>
+    <tr><td>deviceID</td><td>end-device ID in IEEE EUI64 address space that identifies the device (cf. LoRaWAN™)</td><td>Mandatory</td></tr>
     <tr><td>port</td><td>port of the device on which the command was sent (cf. LoRaWAN™)</td><td>Mandatory</td></tr>
     <tr><td>entityName</td><td>id of the NGSI entity to map with the device</td><td>Mandatory</td></tr>
     <tr><td>entityType</td><td>type of the NGSI entity to map with the device</td><td>Mandatory</td></tr>
@@ -183,7 +183,7 @@ Here's an example to register a device:
 
 ```java
 Device device = new Device();
-device.setDeviceEUI("deviceEUI");
+device.setDeviceEUI("deviceID");
 device.setPort(2);
 device.setEntityName("Room1");
 device.setEntityType("Room");
@@ -204,7 +204,7 @@ Here's an example to register a device using the REST API:
 
 ```
 curl -X POST -H "Content-Type: application/json" -d '{
-"deviceEUI":"deviceEUI",
+"deviceID":"deviceID",
 "port":2,
 "entityName":"Room1",
 "entityType":"Room",
@@ -215,7 +215,7 @@ curl -X POST -H "Content-Type: application/json" -d '{
 
 If the device is correctly registered the response is a 201 status code.
 
-You can also unregister a device using the `unregister` method in `Agent` class or send a DELETE HTTP request on `agent/devices/{deviceEUI}` path.
+You can also unregister a device using the `unregister` method in `Agent` class or send a DELETE HTTP request on `agent/devices/{deviceID}` path.
 
 ## <a name="sendCommand"/>Send a command to a device
 

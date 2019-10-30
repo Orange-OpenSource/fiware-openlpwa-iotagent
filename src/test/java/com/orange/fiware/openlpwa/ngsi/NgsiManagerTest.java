@@ -67,13 +67,13 @@ public class NgsiManagerTest {
         String eui = "123";
         String unknown = "unknown";
         DeviceEntity registeredDevice = new DeviceEntity();
-        registeredDevice.setDeviceEUI(eui);
+        registeredDevice.setDeviceID(eui);
         registeredDevice.setType("type");
         registeredDevice.setPort(1);
         registeredDevice.setName("name");
         registeredDevice.setSubscriptionId("123");
         Device device = new Device();
-        device.setDeviceEUI(eui);
+        device.setDeviceID(eui);
         device.setEntityType("type");
         device.setEntityName("name");
         device.setPort(1);
@@ -82,7 +82,7 @@ public class NgsiManagerTest {
         commands.add("test2");
         device.setCommands(commands);
         Device unknownDevice = new Device();
-        unknownDevice.setDeviceEUI(unknown);
+        unknownDevice.setDeviceID(unknown);
         unknownDevice.setCommands(commands);
         when(deviceRepository.findOne(eui)).thenReturn(registeredDevice);
         when(deviceRepository.findOne(unknown)).thenReturn(null);
@@ -115,7 +115,7 @@ public class NgsiManagerTest {
     @Test(expected = AgentException.class)
     public void testSubscribeToCommandsWithoutDeviceCommands() throws AgentException {
         Device device = new Device();
-        device.setDeviceEUI("123");
+        device.setDeviceID("123");
         device.setEntityType("type");
         device.setEntityName("name");
         device.setPort(1);
@@ -195,7 +195,7 @@ public class NgsiManagerTest {
         attribute.setValue("value");
         list.add(attribute);
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI("1234");
+        device.setDeviceID("1234");
         device.setType("type");
         device.setName("name");
         device.setPort(1);
@@ -219,14 +219,14 @@ public class NgsiManagerTest {
     @Test(expected = AgentException.class)
     public void testUpdateDeviceAttributesWithDeviceNullList() throws AgentException {
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI("1234");
+        device.setDeviceID("1234");
         ngsiManager.updateDeviceAttributes(device, null);
     }
 
     @Test(expected = AgentException.class)
     public void testUpdateDeviceAttributesWithDeviceEmptyList() throws AgentException {
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI("1234");
+        device.setDeviceID("1234");
         ngsiManager.updateDeviceAttributes(device, new ArrayList<>());
     }
 

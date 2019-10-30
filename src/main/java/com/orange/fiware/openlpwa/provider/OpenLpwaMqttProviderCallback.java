@@ -19,6 +19,7 @@
 package com.orange.fiware.openlpwa.provider;
 
 import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 /**
  * Provides interface to launch Mqtt events

@@ -18,7 +18,9 @@
 
 package com.orange.fiware.openlpwa.iotagent;
 
+import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
 import com.orange.ngsi.model.ContextAttribute;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -46,6 +48,11 @@ public class OpenLpwaNgsiConverterTest implements OpenLpwaNgsiConverter {
             return contextAttributeList;
         }
 
+        return null;
+    }
+
+    @Override
+    public List<ContextAttribute> decodeData(String deviceEUI, String data, DeviceIncomingMessage incomingMessage) {
         return null;
     }
 

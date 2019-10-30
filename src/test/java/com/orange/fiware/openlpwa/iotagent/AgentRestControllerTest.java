@@ -48,7 +48,7 @@ public class AgentRestControllerTest {
     @Test
     public void testRegisterSuccess() {
         Device device = new Device();
-        device.setDeviceEUI("123");
+        device.setDeviceID("123");
         device.setEntityType("type");
         device.setEntityName("name");
         device.setPort(1);
@@ -59,13 +59,13 @@ public class AgentRestControllerTest {
         verify(mockAgent, times(1)).register(eq(device), any(AgentSuccessCallback.class), any(AgentFailureCallback.class));
         ResponseEntity<?> entity = (ResponseEntity<?>) deferredResult.getResult();
         assertEquals(HttpStatus.CREATED, entity.getStatusCode());
-        assertEquals(String.format("/devices/%s", device.getDeviceEUI()), entity.getHeaders().get("Location").get(0));
+        assertEquals(String.format("/devices/%s", device.getDeviceID()), entity.getHeaders().get("Location").get(0));
     }
 
     @Test
     public void testRegisterFailure() {
         Device device = new Device();
-        device.setDeviceEUI("123");
+        device.setDeviceID("123");
         device.setEntityType("type");
         device.setEntityName("name");
         device.setPort(1);

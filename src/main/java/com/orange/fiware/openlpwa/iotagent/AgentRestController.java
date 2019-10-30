@@ -58,7 +58,7 @@ public class AgentRestController {
                     URI resourceLocation = null;
                     try {
                         if (device != null) {
-                            resourceLocation = new URI(String.format("/devices/%s", device.getDeviceEUI()));
+                            resourceLocation = new URI(String.format("/devices/%s", device.getDeviceID()));
                         }
                     } catch (URISyntaxException ex) {
                         logger.warn("Invalid URI Location ({})", device);

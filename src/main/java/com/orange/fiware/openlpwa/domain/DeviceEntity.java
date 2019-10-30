@@ -31,7 +31,7 @@ import java.util.List;
 public class DeviceEntity {
 
     @Id
-    private String deviceEUI;
+    private String deviceID;
     private String name;
     private String type;
     private String subscriptionId;
@@ -42,7 +42,7 @@ public class DeviceEntity {
     }
 
     public DeviceEntity(Device device, String subscriptionId) {
-        this.deviceEUI = device.getDeviceEUI();
+        this.deviceID = device.getDeviceID();
         this.name = device.getEntityName();
         this.type = device.getEntityType();
         this.port = device.getPort();
@@ -50,12 +50,12 @@ public class DeviceEntity {
         this.subscriptionId = subscriptionId;
     }
 
-    public String getDeviceEUI() {
-        return deviceEUI;
+    public String getDeviceID() {
+        return deviceID;
     }
 
-    public void setDeviceEUI(String deviceEUI) {
-        this.deviceEUI = deviceEUI;
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
     }
 
     public String getName() {

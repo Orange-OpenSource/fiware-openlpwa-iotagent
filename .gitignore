@@ -10,3 +10,4 @@ bin
 *.iws
 spy.log
 *.log
+.DS_Store

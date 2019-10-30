@@ -70,7 +70,7 @@ public class NgsiManager {
      * @throws AgentException when the device is incorrect (null, without deviceEUI or commands)
      */
     public ListenableFuture<SubscribeContextResponse> subscribeToCommands(Device device) throws AgentException {
-        if (device == null || device.getDeviceEUI() == null) {
+        if (device == null || device.getDeviceID() == null) {
             String errorMsg = "Unable to subscribe to a null device or with a null EUI.";
             logger.error(errorMsg);
             throw new AgentException(errorMsg);
@@ -81,9 +81,9 @@ public class NgsiManager {
             throw new AgentException(errorMsg);
         }
         // Check if subscription is already done on CB
-        DeviceEntity deviceRegistered = deviceRepository.findOne(device.getDeviceEUI());
+        DeviceEntity deviceRegistered = deviceRepository.findOne(device.getDeviceID());
         if (deviceRegistered != null && deviceRegistered.getSubscriptionId() != null) {
-            logger.debug("A subscription already exists on CB, call unsubscribe (subscriptionId:{}, EUI: {})", deviceRegistered.getSubscriptionId(), device.getDeviceEUI());
+            logger.debug("A subscription already exists on CB, call unsubscribe (subscriptionId:{}, EUI: {})", deviceRegistered.getSubscriptionId(), device.getDeviceID());
             unsubscribe(deviceRegistered.getSubscriptionId());
         }
         SubscribeContext context = new SubscribeContext();
@@ -94,7 +94,7 @@ public class NgsiManager {
         List<NotifyCondition> conditions = new ArrayList<>();
         List<String> attributesList = device.getCommands().stream().map(s -> s + COMMAND_SUFFIX).collect(Collectors.toList());
         context.setAttributeList(attributesList);
-        context.setReference(URI.create(contextBrokerLocalUrl + "/v1/notifyContext/" + device.getDeviceEUI()));
+        context.setReference(URI.create(contextBrokerLocalUrl + "/v1/notifyContext/" + device.getDeviceID()));
         conditions.add(new NotifyCondition(NotifyConditionEnum.ONCHANGE, attributesList));
         context.setNotifyConditionList(conditions);
         logger.debug("Subscribe to Context Broker, url : {}", contextBrokerRemoteUrl);
