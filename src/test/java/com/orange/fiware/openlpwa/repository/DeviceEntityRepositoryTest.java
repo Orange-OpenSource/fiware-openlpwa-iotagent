@@ -28,6 +28,8 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Optional;
+
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -50,8 +52,8 @@ public class DeviceEntityRepositoryTest {
 
     @Test
     public void testFindByDeviceEUI() {
-        DeviceEntity device = deviceRepository.findOne(deviceEUI);
-        checkDevice(device);
+        Optional<DeviceEntity> device = deviceRepository.findById(deviceEUI);
+        checkDevice(device.get());
     }
 
     private void insertDevice() {

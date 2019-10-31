@@ -35,10 +35,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Locale;
-import java.util.TimeZone;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -73,12 +70,12 @@ public class NgsiRestController extends NgsiRestBaseController {
         } else {
             response.setResponseCode(new StatusCode(CodeEnum.CODE_200));
             // Check if subscriptionId is still valid for agent and device
-            DeviceEntity deviceRegistered = deviceRepository.findOne(deviceEUI);
-            if (deviceRegistered != null
-                    && !deviceRegistered.getSubscriptionId().equalsIgnoreCase(notify.getSubscriptionId())) {
+            Optional<DeviceEntity> deviceRegistered = deviceRepository.findById(deviceEUI);
+            if (deviceRegistered.isPresent()
+                    && !deviceRegistered.get().getSubscriptionId().equalsIgnoreCase(notify.getSubscriptionId())) {
                 logger.debug("Receive a notify for a non-valid subscriptionId, call unsubscribe (subscriptionId:{})", notify.getSubscriptionId());
                 manager.unsubscribe(notify.getSubscriptionId());
-            } else if (deviceRegistered != null) {
+            } else if (deviceRegistered.isPresent()) {
                 notify.getContextElementResponseList()
                         .stream()
                         .filter(elementResponse -> elementResponse.getStatusCode().getCode().equals(CodeEnum.CODE_200.getLabel()))

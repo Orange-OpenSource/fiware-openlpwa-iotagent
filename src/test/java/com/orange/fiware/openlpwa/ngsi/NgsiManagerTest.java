@@ -84,8 +84,8 @@ public class NgsiManagerTest {
         Device unknownDevice = new Device();
         unknownDevice.setDeviceID(unknown);
         unknownDevice.setCommands(commands);
-        when(deviceRepository.findOne(eui)).thenReturn(registeredDevice);
-        when(deviceRepository.findOne(unknown)).thenReturn(null);
+        when(deviceRepository.findById(eui)).thenReturn(java.util.Optional.of(registeredDevice));
+        when(deviceRepository.findById(unknown)).thenReturn(null);
         ReflectionTestUtils.setField(ngsiManager, "contextBrokerLocalUrl", "http://local");
         ngsiManager.subscribeToCommands(unknownDevice);
         ngsiManager.subscribeToCommands(device);
