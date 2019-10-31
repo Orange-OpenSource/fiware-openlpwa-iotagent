@@ -12,7 +12,7 @@
     <url>https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent</url>
 
     <properties>
-        <java.version>1.8</java.version>
+        <java.version>11</java.version>
         <spring.version>4.3.0.RELEASE</spring.version>
         <jackson.version>2.9.9</jackson.version>
         <fiware.ngsi.version>0.1.3</fiware.ngsi.version>
@@ -129,9 +129,6 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <configuration>
-                    <source>8</source>
-                </configuration>
                 <executions>
                     <execution>
                         <id>attach-javadocs</id>
