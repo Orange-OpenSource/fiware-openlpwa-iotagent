@@ -405,7 +405,7 @@ public class AgentTest {
     @Test
     public void testUnregisterDeviceWithSuccess() throws AgentException {
         simulateNgsiManagerUnsubscribeSuccess(false);
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.unregister(device.getDeviceID(),
                 () -> resultCallback.onSuccess(true),
@@ -418,7 +418,7 @@ public class AgentTest {
     @Test
     public void testUnregisterDeviceWithUnknownDevice() throws AgentException {
         simulateNgsiManagerUnsubscribeSuccess(false);
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(null);
+        when(mockDeviceRepository.findById(anyString())).thenReturn(null);
 
         agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
@@ -434,7 +434,7 @@ public class AgentTest {
     @Test
     public void testUnregisterDeviceWithUnsubscriptionErrorCode() throws AgentException {
         simulateNgsiManagerUnsubscribeSuccess(true);
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
@@ -450,7 +450,7 @@ public class AgentTest {
     @Test
     public void testUnregisterDeviceWithUnsubscriptionFailure() throws AgentException {
         simulateNgsiManagerUnsubscribeFailure();
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
@@ -465,7 +465,7 @@ public class AgentTest {
 
     @Test
     public void testUnregisterDeviceWithoutSubscriptionId() throws Exception {
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, null));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, null)));
 
         agent.unregister(device.getDeviceID(),
                 () -> {
@@ -483,7 +483,7 @@ public class AgentTest {
 
     @Test
     public void testUnregisterDeviceWithUnsubscribeToCommandsException() throws Exception {
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
         simulateNgsiManagerUnsubscribeException();
 
         agent.unregister(device.getDeviceID(),
@@ -499,7 +499,7 @@ public class AgentTest {
 
     @Test
     public void testExecuteCommandsWithUnregisteredDevice() {
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(null);
+        when(mockDeviceRepository.findById(anyString())).thenReturn(null);
 
         agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                 (success, creationDate) -> assertEquals(false, success));
@@ -507,7 +507,7 @@ public class AgentTest {
 
     @Test
     public void testExecuteCommandsWithoutConverter() {
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                 (success, creationDate) -> assertEquals(false, success));
@@ -517,7 +517,7 @@ public class AgentTest {
     public void testExecuteCommandsWithoutPayload() {
         simulateMqttConnectionSuccess();
         simulateMqttSubscriptionSuccess();
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.start(new OpenLpwaNgsiConverterTest(true),
                 () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
@@ -531,7 +531,7 @@ public class AgentTest {
         simulateMqttConnectionSuccess();
         simulateMqttSubscriptionSuccess();
         simulateOpenLpwaProviderRegisterDeviceCommandSuccess(DeviceCommand.DeviceCommandStatus.SENT);
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
                 () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
@@ -549,7 +549,7 @@ public class AgentTest {
         simulateMqttConnectionSuccess();
         simulateMqttSubscriptionSuccess();
         simulateOpenLpwaProviderRegisterDeviceCommandSuccess(DeviceCommand.DeviceCommandStatus.ERROR);
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
                 () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
@@ -563,7 +563,7 @@ public class AgentTest {
         simulateMqttConnectionSuccess();
         simulateMqttSubscriptionSuccess();
         simulateOpenLpwaProviderRegisterDeviceCommandFailure();
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
                 () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
@@ -577,7 +577,7 @@ public class AgentTest {
         simulateMqttConnectionSuccess();
         simulateMqttSubscriptionSuccess();
         simulateOpenLpwaProviderRegisterDeviceCommandException();
-        when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
+        when(mockDeviceRepository.findById(anyString())).thenReturn(java.util.Optional.of(new DeviceEntity(device, subscriptionId)));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
                 () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,

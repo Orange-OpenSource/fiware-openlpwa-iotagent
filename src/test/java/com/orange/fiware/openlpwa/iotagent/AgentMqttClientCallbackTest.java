@@ -104,7 +104,7 @@ public class AgentMqttClientCallbackTest {
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
-        when(deviceRepository.findOne(eui)).thenReturn(device);
+        when(deviceRepository.findById(eui)).thenReturn(java.util.Optional.of(device));
         DeviceIncomingMessage message = new DeviceIncomingMessage();
         message.setData("123");
         callback.newMessageArrived(eui, message);
@@ -120,7 +120,7 @@ public class AgentMqttClientCallbackTest {
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
-        when(deviceRepository.findOne(eui)).thenReturn(device);
+        when(deviceRepository.findById(eui)).thenReturn(java.util.Optional.of(device));
         DeviceIncomingMessage message = new DeviceIncomingMessage();
         message.setData(null);
         callback.newMessageArrived(eui, message);
@@ -133,7 +133,7 @@ public class AgentMqttClientCallbackTest {
     @Test
     public void testNewMessageArrivedForUnknownDevice() throws AgentException {
         String unknown = "unknown";
-        when(deviceRepository.findOne(unknown)).thenReturn(null);
+        when(deviceRepository.findById(unknown)).thenReturn(null);
         DeviceIncomingMessage message = new DeviceIncomingMessage();
         message.setData("123");
         callback.newMessageArrived(unknown, message);
@@ -150,7 +150,7 @@ public class AgentMqttClientCallbackTest {
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
-        when(deviceRepository.findOne(eui)).thenReturn(device);
+        when(deviceRepository.findById(eui)).thenReturn(java.util.Optional.of(device));
         DeviceIncomingMessage message = new DeviceIncomingMessage();
         message.setData("123");
         callback.newMessageArrived(eui, message);

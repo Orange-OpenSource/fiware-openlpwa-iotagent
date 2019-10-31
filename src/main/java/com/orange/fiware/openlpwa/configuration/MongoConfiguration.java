@@ -54,9 +54,8 @@ class MongoConfiguration extends AbstractMongoConfiguration {
         return mongoDatabasename;
     }
 
-    @Override
     @Bean
-    public Mongo mongo() throws Exception {
+    public MongoClient mongoClient() {
         if (username != null && password != null && username.length() > 0) {
             ServerAddress address = new ServerAddress(mongoHost, mongoPort);
             MongoCredential credential = MongoCredential.createCredential(username, mongoDatabasename, password.toCharArray());

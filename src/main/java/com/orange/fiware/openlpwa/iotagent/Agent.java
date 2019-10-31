@@ -42,6 +42,7 @@ import org.springframework.util.concurrent.SuccessCallback;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 
 import static com.orange.ngsi.model.CodeEnum.CODE_200;
@@ -172,14 +173,14 @@ public class Agent {
      * @param failureCallback   Callback called when an error occurs
      */
     public void unregister(String deviceID, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
-        DeviceEntity registeredDevice = deviceRepository.findOne(deviceID);
-        if (registeredDevice != null) {
+        Optional<DeviceEntity> registeredDevice = deviceRepository.findById(deviceID);
+        if (registeredDevice.isPresent()) {
             try {
                 unsubscribeToCommands(
-                        registeredDevice,
+                        registeredDevice.get(),
                         () -> {
-                            logger.debug("Device (DeviceID:{}) deleted.", registeredDevice.getDeviceID());
-                            deviceRepository.delete(registeredDevice);
+                            logger.debug("Device (DeviceID:{}) deleted.", registeredDevice.get().getDeviceID());
+                            deviceRepository.delete(registeredDevice.get());
                             launchSuccessCallback(successCallback);
                         },
                         ex -> launchFailureCallback(failureCallback, new AgentException(ex.getMessage(), ex))
@@ -334,8 +335,8 @@ public class Agent {
      * @param callback call when command is launched
      */
     void executeCommand(String deviceID, String commandName, ContextAttribute attribute, BiConsumer<Boolean, Date> callback) {
-        DeviceEntity device = deviceRepository.findOne(deviceID);
-        if (device == null || converter == null) {
+        Optional<DeviceEntity> device = deviceRepository.findById(deviceID);
+        if (device.isEmpty() || converter == null) {
             if (callback != null) {
                 callback.accept(false, new Date());
             }
@@ -346,10 +347,10 @@ public class Agent {
         if (encodedPayload != null && encodedPayload.length() > 0) {
             RegisterDeviceCommandParameter command = new RegisterDeviceCommandParameter();
             command.setData(encodedPayload);
-            command.setPort(device.getPort());
+            command.setPort(device.get().getPort());
             command.setConfirmed(false);
             try {
-                openLpwaProvider.registerDeviceCommand(device.getDeviceID(), command).addCallback(
+                openLpwaProvider.registerDeviceCommand(device.get().getDeviceID(), command).addCallback(
                         result -> {
                             logger.debug("Command {} sent to OpenLpwa provider for deviceID:{}", commandName, deviceID);
                             Boolean success = result.getCommandStatus() == DeviceCommand.DeviceCommandStatus.SENT;
@@ -429,8 +430,8 @@ public class Agent {
 
         @Override
         public void newMessageArrived(String deviceID, DeviceIncomingMessage incomingMessage) {
-            DeviceEntity device = deviceRepository.findOne(deviceID);
-            if (device == null) {
+            Optional<DeviceEntity> device = deviceRepository.findById(deviceID);
+            if (device.isEmpty()) {
                 logger.error("Device not registered, can't treat message (ID:{})", deviceID);
                 return;
             }
@@ -447,7 +448,7 @@ public class Agent {
             if (converter != null) {
                 List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
                 try {
-                    ngsiManager.updateDeviceAttributes(device, decodedAttributes);
+                    ngsiManager.updateDeviceAttributes(device.get(), decodedAttributes);
                 } catch (AgentException e) {
                     logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
                 }

@@ -70,8 +70,8 @@ public class NgsiRestControllerTest {
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
-        when(deviceRepository.findOne(eui)).thenReturn(device);
-        when(deviceRepository.findOne(unknown)).thenReturn(null);
+        when(deviceRepository.findById(eui)).thenReturn(java.util.Optional.of(device));
+        when(deviceRepository.findById(unknown)).thenReturn(null);
         HttpServletRequest request = mock(HttpServletRequest.class);
         List<ContextElementResponse> contextElementResponseList = new ArrayList<>();
         NotifyContext emptyContext = new NotifyContext();

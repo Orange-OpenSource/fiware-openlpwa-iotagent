@@ -81,10 +81,10 @@ public class NgsiManager {
             throw new AgentException(errorMsg);
         }
         // Check if subscription is already done on CB
-        DeviceEntity deviceRegistered = deviceRepository.findOne(device.getDeviceID());
-        if (deviceRegistered != null && deviceRegistered.getSubscriptionId() != null) {
-            logger.debug("A subscription already exists on CB, call unsubscribe (subscriptionId:{}, EUI: {})", deviceRegistered.getSubscriptionId(), device.getDeviceID());
-            unsubscribe(deviceRegistered.getSubscriptionId());
+        Optional<DeviceEntity> deviceRegistered = deviceRepository.findById(device.getDeviceID());
+        if (deviceRegistered.isPresent() && deviceRegistered.get().getSubscriptionId() != null) {
+            logger.debug("A subscription already exists on CB, call unsubscribe (subscriptionId:{}, EUI: {})", deviceRegistered.get().getSubscriptionId(), device.getDeviceID());
+            unsubscribe(deviceRegistered.get().getSubscriptionId());
         }
         SubscribeContext context = new SubscribeContext();
         List<EntityId> entities = new ArrayList<>();
