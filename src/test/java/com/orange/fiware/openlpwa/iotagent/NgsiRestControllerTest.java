@@ -65,7 +65,7 @@ public class NgsiRestControllerTest {
         String eui = "123";
         String unknown = "unknown";
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI(eui);
+        device.setDeviceID(eui);
         device.setType("type");
         device.setPort(1);
         device.setName("name");

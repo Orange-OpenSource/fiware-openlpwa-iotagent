@@ -18,9 +18,12 @@
 
 package com.orange.fiware.openlpwa.iotagent;
 
+import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
 import com.orange.ngsi.model.ContextAttribute;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Interface to convert Open LPWA payloads into Ngsi
@@ -29,18 +32,20 @@ public interface OpenLpwaNgsiConverter {
 
     /**
      * Decode an uplink payload
-     * @param deviceEUI DeviceEUI
+     * @param deviceID DeviceID
      * @param data Hexadecimal payload
      * @return List of <code>ContextAttribute</code> to update Ngsi context broker
      */
-    List<ContextAttribute> decodeData(String deviceEUI, String data);
+    List<ContextAttribute> decodeData(String deviceID, String data);
+
+    List<ContextAttribute> decodeData(String deviceID, String data, DeviceIncomingMessage incomingMessage);
 
     /**
      * Encode a downlink command
-     * @param deviceEUI DeviceEUI
+     * @param deviceID DeviceID
      * @param commandName Command name
      * @param attribute Attribute which represents the command in Ngsi context broker
      * @return Hexadecimal payload to send
      */
-    String encodeDataForCommand(String deviceEUI, String commandName, ContextAttribute attribute);
+    String encodeDataForCommand(String deviceID, String commandName, ContextAttribute attribute);
 }

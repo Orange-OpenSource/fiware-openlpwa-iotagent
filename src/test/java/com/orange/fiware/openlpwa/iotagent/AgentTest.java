@@ -78,7 +78,7 @@ public class AgentTest {
     public void setup() {
         initMocks(this);
         device = new Device();
-        device.setDeviceEUI("testDevEUI");
+        device.setDeviceID("testDevEUI");
         device.setPort(2);
         device.setEntityName("testEntityName");
         device.setEntityType("testEntityType");
@@ -231,7 +231,7 @@ public class AgentTest {
         simulateNgsiManagerSubscribeToCommandsSuccess(false);
 
         Device invalidDevice = new Device();
-        invalidDevice.setDeviceEUI("testDeviceEUI");
+        invalidDevice.setDeviceID("testDeviceEUI");
         invalidDevice.setEntityName("testEntityName");
         invalidDevice.setEntityType("testEntityType");
         agent.register(invalidDevice,
@@ -252,7 +252,7 @@ public class AgentTest {
         simulateNgsiManagerSubscribeToCommandsSuccess(false);
 
         Device invalidDevice = new Device();
-        invalidDevice.setDeviceEUI("testDeviceEUI");
+        invalidDevice.setDeviceID("testDeviceEUI");
         invalidDevice.setPort(2);
         invalidDevice.setEntityType("testEntityType");
         agent.register(invalidDevice,
@@ -273,7 +273,7 @@ public class AgentTest {
         simulateNgsiManagerSubscribeToCommandsSuccess(false);
 
         Device invalidDevice = new Device();
-        invalidDevice.setDeviceEUI("testDeviceEUI");
+        invalidDevice.setDeviceID("testDeviceEUI");
         invalidDevice.setPort(2);
         invalidDevice.setEntityName("testEntityName");
         agent.register(invalidDevice,
@@ -407,7 +407,7 @@ public class AgentTest {
         simulateNgsiManagerUnsubscribeSuccess(false);
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> resultCallback.onSuccess(true),
                 exception -> fail("Failed callback unexpected call")
         );
@@ -420,7 +420,7 @@ public class AgentTest {
         simulateNgsiManagerUnsubscribeSuccess(false);
         when(mockDeviceRepository.findOne(anyString())).thenReturn(null);
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
                 exception -> {
                     assertNotNull("exception is null", exception);
@@ -436,7 +436,7 @@ public class AgentTest {
         simulateNgsiManagerUnsubscribeSuccess(true);
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
                 exception -> {
                     assertNotNull("exception is null", exception);
@@ -452,7 +452,7 @@ public class AgentTest {
         simulateNgsiManagerUnsubscribeFailure();
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
                 exception -> {
                     assertNotNull("exception is null", exception);
@@ -467,7 +467,7 @@ public class AgentTest {
     public void testUnregisterDeviceWithoutSubscriptionId() throws Exception {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, null));
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> {
                     try {
                         verify(mockNgsiManager, never()).unsubscribe(anyString());
@@ -486,7 +486,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
         simulateNgsiManagerUnsubscribeException();
 
-        agent.unregister(device.getDeviceEUI(),
+        agent.unregister(device.getDeviceID(),
                 () -> fail("Success callback unexpected call"),
                 exception -> {
                     assertNotNull("exception is null", exception);
@@ -501,7 +501,7 @@ public class AgentTest {
     public void testExecuteCommandsWithUnregisteredDevice() {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(null);
 
-        agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+        agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                 (success, creationDate) -> assertEquals(false, success));
     }
 
@@ -509,7 +509,7 @@ public class AgentTest {
     public void testExecuteCommandsWithoutConverter() {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
-        agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+        agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                 (success, creationDate) -> assertEquals(false, success));
     }
 
@@ -520,7 +520,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
         agent.start(new OpenLpwaNgsiConverterTest(true),
-                () -> agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+                () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                         (success, creationDate) -> assertEquals(false, success)),
                 exception -> fail("Failed callback unexpected call")
         );
@@ -534,7 +534,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
-                () -> agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+                () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                         (success, creationDate) -> {
                             assertEquals(true, success);
                             assertNotNull(creationDate);
@@ -552,7 +552,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
-                () -> agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+                () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                         (success, creationDate) -> assertEquals(false, success)),
                 exception -> fail("Failed callback unexpected call")
         );
@@ -566,7 +566,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
-                () -> agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+                () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                         (success, creationDate) -> assertEquals(false, success)),
                 exception -> fail("Failed callback unexpected call")
         );
@@ -580,7 +580,7 @@ public class AgentTest {
         when(mockDeviceRepository.findOne(anyString())).thenReturn(new DeviceEntity(device, subscriptionId));
 
         agent.start(new OpenLpwaNgsiConverterTest(false),
-                () -> agent.executeCommand(device.getDeviceEUI(), commandName, commandAttribute,
+                () -> agent.executeCommand(device.getDeviceID(), commandName, commandAttribute,
                         (success, creationDate) -> assertEquals(false, success)),
                 exception -> fail("Failed callback unexpected call")
         );
@@ -591,7 +591,7 @@ public class AgentTest {
         List<DeviceEntity> devicesList = new ArrayList<>();
         devicesList.add(new DeviceEntity(device, subscriptionId));
         DeviceEntity secondDevice = new DeviceEntity();
-        secondDevice.setDeviceEUI("secondDevice");
+        secondDevice.setDeviceID("secondDevice");
         secondDevice.setPort(2);
         secondDevice.setSubscriptionId("secondDeviceSubscriptionId");
         devicesList.add(secondDevice);

@@ -22,7 +22,9 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Incoming message from MQTT broker for a device
@@ -35,8 +37,9 @@ public class DeviceIncomingMessage {
     private Date date;
     private String model;
     private List<String> tags;
-    private DeviceIncomingMessageValue value;
+    private DeviceIncomingMessageLocation location;
     private DeviceIncomingMessageMetadata metadata;
+    private Map<String, Object> value;
 
     public String getStreamId() {
         return streamId;
@@ -70,11 +73,11 @@ public class DeviceIncomingMessage {
         this.tags = tags;
     }
 
-    public DeviceIncomingMessageValue getValue() {
+    public Map<String, Object> getValue() {
         return value;
     }
 
-    public void setValue(DeviceIncomingMessageValue value) {
+    public void setValue(Map<String, Object> value) {
         this.value = value;
     }
 
@@ -86,50 +89,20 @@ public class DeviceIncomingMessage {
         this.metadata = metadata;
     }
 
-    /**
-     * Incoming message information
-     */
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public class DeviceIncomingMessageValue {
+    public DeviceIncomingMessageLocation getLocation() {
+        return location;
+    }
 
-        private Integer port;
-        @JsonProperty("fcnt")
-        private Integer frameCount;
-        private Integer signalLevel;
-        @JsonProperty("payload")
-        private String data;
+    public void setLocation(DeviceIncomingMessageLocation location) {
+        this.location = location;
+    }
 
-        public Integer getPort() {
-            return port;
-        }
+    public String getData() {
+        return (String) value.get("payload");
+    }
 
-        public void setPort(Integer port) {
-            this.port = port;
-        }
-
-        public Integer getFrameCount() {
-            return frameCount;
-        }
-
-        public void setFrameCount(Integer frameCount) {
-            this.frameCount = frameCount;
-        }
-
-        public Integer getSignalLevel() {
-            return signalLevel;
-        }
-
-        public void setSignalLevel(Integer signalLevel) {
-            this.signalLevel = signalLevel;
-        }
-
-        public String getData() {
-            return data;
-        }
-
-        public void setData(String data) {
-            this.data = data;
-        }
+    public void setData(String data) {
+        this.value.put("patload", data);
     }
 
     /**
@@ -146,6 +119,59 @@ public class DeviceIncomingMessage {
 
         public void setSource(String source) {
             this.source = source;
+        }
+    }
+
+    /**
+     * Location
+     */
+    @JsonIgnoreProperties(ignoreUnknown = true)
+    public class DeviceIncomingMessageLocation {
+
+        private Float lat;
+        private Float lon;
+        private int alt;
+        private int accuracy;
+        private String provider;
+
+        public Float getLat() {
+            return lat;
+        }
+
+        public Float getLon() {
+            return lon;
+        }
+
+        public int getAlt() {
+            return alt;
+        }
+
+        public int getAccuracy() {
+            return accuracy;
+        }
+
+        public String getProvider() {
+            return provider;
+        }
+
+        public void setLat(Float lat) {
+            this.lat = lat;
+        }
+
+        public void setLon(Float lon) {
+            this.lon = lon;
+        }
+
+        public void setAlt(int alt) {
+            this.alt = alt;
+        }
+
+        public void setAccuracy(int accuracy) {
+            this.accuracy = accuracy;
+        }
+
+        public void setProvider(String provider) {
+            this.provider = provider;
         }
     }
 }

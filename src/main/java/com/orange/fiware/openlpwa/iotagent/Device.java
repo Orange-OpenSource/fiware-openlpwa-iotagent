@@ -22,7 +22,7 @@ import java.util.List;
 
 public final class Device {
 
-    private String deviceEUI;
+    private String deviceID;
     private Integer port;
     private String entityName;
     private String entityType;
@@ -31,12 +31,12 @@ public final class Device {
     public Device() {
     }
 
-    public String getDeviceEUI() {
-        return deviceEUI;
+    public String getDeviceID() {
+        return deviceID;
     }
 
-    public void setDeviceEUI(String deviceEUI) {
-        this.deviceEUI = deviceEUI;
+    public void setDeviceID(String deviceID) {
+        this.deviceID = deviceID;
     }
 
     public Integer getPort() {
@@ -74,7 +74,7 @@ public final class Device {
     @Override
     public String toString() {
         return "Device{" +
-                "deviceEUI='" + deviceEUI + '\'' +
+                "deviceID='" + deviceID + '\'' +
                 "entityName='" + entityName + '\'' +
                 "entityType=" + entityType + '\'' +
                 '}';

@@ -59,7 +59,7 @@ public class DeviceEntityRepositoryTest {
     }
 
     private void checkDevice(DeviceEntity device) {
-        assertEquals(deviceEUI, device.getDeviceEUI());
+        assertEquals(deviceEUI, device.getDeviceID());
         assertEquals("OpenSpace", device.getName());
         assertEquals("Room", device.getType());
         assertEquals("51c0ac9ed714fb3b37d7d5a8", device.getSubscriptionId());

@@ -223,22 +223,18 @@ public class OpenLpwaMqttProvider implements MqttCallback {
         if (clientCallback != null) {
             // Deserialize incoming message
             DeviceIncomingMessage incomingMessage;
-            String deviceEUI = null;
+            String deviceID = null;
             try {
                 incomingMessage = new ObjectMapper().readValue(mqttMessage.getPayload(), DeviceIncomingMessage.class);
                 if (incomingMessage != null) {
-                    // Retrieve the deviceEUI from the source metadata
+                    // Retrieve the deviceID from the source metadata
                     String source = incomingMessage.getMetadata().getSource();
                     if (source != null) {
-                        String[] splitedSource = source.split(":");
-                        if (splitedSource.length == 3) {
-                            deviceEUI = splitedSource[2];
-                        }
+                        deviceID = source;
                     }
                 }
 
-                clientCallback.newMessageArrived(deviceEUI, incomingMessage);
-
+                clientCallback.newMessageArrived(deviceID, incomingMessage);
             } catch (Throwable e) {
                 logger.error("Unhandled exception while reading message.", e);
             }

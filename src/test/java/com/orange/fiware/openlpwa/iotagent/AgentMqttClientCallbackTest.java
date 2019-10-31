@@ -99,16 +99,14 @@ public class AgentMqttClientCallbackTest {
     public void testNewMessageArrivedOk() throws AgentException {
         String eui = "123";
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI(eui);
+        device.setDeviceID(eui);
         device.setType("type");
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
         when(deviceRepository.findOne(eui)).thenReturn(device);
         DeviceIncomingMessage message = new DeviceIncomingMessage();
-        DeviceIncomingMessage.DeviceIncomingMessageValue value = message.new DeviceIncomingMessageValue();
-        value.setData("123");
-        message.setValue(value);
+        message.setData("123");
         callback.newMessageArrived(eui, message);
         verify(ngsiManager, times(1)).updateDeviceAttributes(eq(device), anyListOf(ContextAttribute.class));
     }
@@ -117,16 +115,14 @@ public class AgentMqttClientCallbackTest {
     public void testNewMessageArrivedBadMessage() throws AgentException {
         String eui = "123";
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI(eui);
+        device.setDeviceID(eui);
         device.setType("type");
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
         when(deviceRepository.findOne(eui)).thenReturn(device);
         DeviceIncomingMessage message = new DeviceIncomingMessage();
-        DeviceIncomingMessage.DeviceIncomingMessageValue value = message.new DeviceIncomingMessageValue();
-        value.setData(null);
-        message.setValue(value);
+        message.setData(null);
         callback.newMessageArrived(eui, message);
         message.setValue(null);
         callback.newMessageArrived(eui, message);
@@ -139,9 +135,7 @@ public class AgentMqttClientCallbackTest {
         String unknown = "unknown";
         when(deviceRepository.findOne(unknown)).thenReturn(null);
         DeviceIncomingMessage message = new DeviceIncomingMessage();
-        DeviceIncomingMessage.DeviceIncomingMessageValue value = message.new DeviceIncomingMessageValue();
-        value.setData("123");
-        message.setValue(value);
+        message.setData("123");
         callback.newMessageArrived(unknown, message);
         verify(ngsiManager, times(0)).updateDeviceAttributes(any(DeviceEntity.class), anyListOf(ContextAttribute.class));
     }
@@ -151,16 +145,14 @@ public class AgentMqttClientCallbackTest {
         ReflectionTestUtils.setField(agent, "converter", null);
         String eui = "123";
         DeviceEntity device = new DeviceEntity();
-        device.setDeviceEUI(eui);
+        device.setDeviceID(eui);
         device.setType("type");
         device.setPort(1);
         device.setName("name");
         device.setSubscriptionId("123");
         when(deviceRepository.findOne(eui)).thenReturn(device);
         DeviceIncomingMessage message = new DeviceIncomingMessage();
-        DeviceIncomingMessage.DeviceIncomingMessageValue value = message.new DeviceIncomingMessageValue();
-        value.setData("123");
-        message.setValue(value);
+        message.setData("123");
         callback.newMessageArrived(eui, message);
         verify(ngsiManager, times(0)).updateDeviceAttributes(eq(device), anyListOf(ContextAttribute.class));
         ReflectionTestUtils.setField(agent, "converter", converter);
