@@ -40,8 +40,8 @@ public class OpenLpwaMqttProvider implements MqttCallback {
 
     private static Logger logger = LoggerFactory.getLogger(OpenLpwaMqttProvider.class);
     private final static String userName = "payload";
-    private final static String topicPath = "router/~event/v1/data/new/typ/+/dev/+/con/lora/evt/+/grp/#";
     private final static int subscribeQOS = 1;
+    private static String topicPath;
     private String serverUri;
     private String clientId;
     private String apiKey;
@@ -60,7 +60,9 @@ public class OpenLpwaMqttProvider implements MqttCallback {
     public OpenLpwaMqttProvider(@Value("${openLpwaProvider.mqttUri}") String serverUri,
                                 @Value("${openLpwaProvider.mqttClientId}") String clientId,
                                 @Value("${openLpwaProvider.apiKey}") String apiKey,
+                                @Value("${openLpwaProvider.topicPath}") String topicPath,
                                 OpenLpwaMqttProviderCallback clientCallback) throws ConfigurationException, MqttException {
+        OpenLpwaMqttProvider.topicPath = topicPath;
         this.serverUri = serverUri;
         this.clientId = clientId != null ? clientId : MqttAsyncClient.generateClientId();
         this.apiKey = apiKey;
