@@ -72,6 +72,7 @@ public class Agent {
 
     /**
      * Start the IoT agent
+     * @param converter converter
      * @param successCallback   Callback called when the agent is correctly started
      * @param failureCallback   Callback called when an error occurs
      */

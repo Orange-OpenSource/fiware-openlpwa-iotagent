@@ -52,6 +52,7 @@ public class OpenLpwaMqttProviderTest {
     private static final String clientId = "testClientId";
     private static final String apiKey = "TESTOpenLpwaProviderMQTT";
     private final static String deviceEUI = "testMQTTdevice";
+    private final static String topicPath = "fifo/fiware_orange";
     private OpenLpwaMqttProvider mqttClient;
     @Mock
     private MqttAsyncClient mockMqttAsyncClient;
@@ -68,7 +69,7 @@ public class OpenLpwaMqttProviderTest {
                 "testMqttWithoutApiKeyParameter",
                 "testMqttWithoutClientIdParameter");
         if (!testsWithoutInitialization.stream().anyMatch(s -> s.equals(methodName))) {
-            mqttClient = new OpenLpwaMqttProvider(serverUri, clientId, apiKey, clientCallback);
+            mqttClient = new OpenLpwaMqttProvider(serverUri, clientId, apiKey, topicPath, clientCallback);
             ReflectionTestUtils.setField(mqttClient, "mqttAsyncClient", mockMqttAsyncClient);
         }
     }
@@ -80,17 +81,17 @@ public class OpenLpwaMqttProviderTest {
 
     @Test(expected = ConfigurationException.class)
     public void testMqttWithoutServerUriParameter() throws Exception {
-        mqttClient = new OpenLpwaMqttProvider(null, clientId, apiKey, null);
+        mqttClient = new OpenLpwaMqttProvider(null, clientId, apiKey, topicPath, null);
     }
 
     @Test(expected = ConfigurationException.class)
     public void testMqttWithoutApiKeyParameter() throws Exception {
-        mqttClient = new OpenLpwaMqttProvider(serverUri, clientId, null, null);
+        mqttClient = new OpenLpwaMqttProvider(serverUri, clientId, null, topicPath, null);
     }
 
     @Test
     public void testMqttWithoutClientIdParameter() throws Exception {
-        mqttClient = new OpenLpwaMqttProvider(serverUri, null, apiKey, null);
+        mqttClient = new OpenLpwaMqttProvider(serverUri, null, apiKey, topicPath, null);
         assertThat(mqttClient.getClientId(), not(isEmptyOrNullString()));
     }
 
@@ -294,7 +295,7 @@ public class OpenLpwaMqttProviderTest {
         mqttClient.subscribe(subscribedClientId -> assertEquals(clientId, subscribedClientId),
                 exception -> fail("Failure callback unexpected call"));
 
-        mqttClient.messageArrived("router/~event/v1/data/new/urn/lora/#", new MqttMessage(jsonPayload.getBytes()));
+        mqttClient.messageArrived(topicPath, new MqttMessage(jsonPayload.getBytes()));
         verify(clientCallback).newMessageArrived(eq(deviceEUI), argThat(new ArgumentMatcher<DeviceIncomingMessage>() {
             @Override
             public boolean matches(Object o) {
@@ -329,7 +330,7 @@ public class OpenLpwaMqttProviderTest {
         mqttClient.subscribe(subscribedClientId -> assertEquals(clientId, subscribedClientId),
                 exception -> fail("Failure callback unexpected call"));
 
-        mqttClient.messageArrived("router/~event/v1/data/new/urn/lora/#", new MqttMessage(jsonPayload.getBytes()));
+        mqttClient.messageArrived(topicPath, new MqttMessage(jsonPayload.getBytes()));
         verify(clientCallback, never()).newMessageArrived(anyString(), any(DeviceIncomingMessage.class));
     }
 

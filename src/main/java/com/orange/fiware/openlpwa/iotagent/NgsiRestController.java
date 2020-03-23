@@ -58,8 +58,8 @@ public class NgsiRestController extends NgsiRestBaseController {
      * @param notify NotifyContext
      * @param deviceEUI Device EUI of the device
      * @param httpServletRequest Servlet request
-     * @return Response
-     * @throws Exception
+     * @return Response response
+     * @throws Exception exception
      */
     @RequestMapping(value = "/notifyContext/{deviceEUI}", method = RequestMethod.POST, consumes = {MediaType.APPLICATION_JSON_VALUE, MediaType.APPLICATION_XML_VALUE})
     final public ResponseEntity<NotifyContextResponse> notifyContextRequest(@RequestBody final NotifyContext notify, @PathVariable String deviceEUI, HttpServletRequest httpServletRequest) throws Exception {
