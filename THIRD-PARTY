@@ -1,0 +1,32 @@
+This document contains the list of Third Party Software along with the license information.
+
+Third Party Software may impose additional restrictions and it is the user's responsibility to ensure that they have met the licensing
+requirements of the relevant license of the Third Party Software they are using.
+
+//-----//
+JUnit - version 5.2.0
+Copyright © 2002-2016 JUnit
+JUnit is distributed under the terms and conditions of the Eclipse Public License v2.0 (http://www.eclipse.org/legal/epl-v20.html).
+You may download the source code on the following website: http://junit.org
+//-----//
+Mockito - version 1.10.19
+Copyright © 2007 Mockito contributors
+Mockito is distributed under the terms and conditions of the MIT License (http://opensource.org/licenses/MIT).
+You may download the source code on the following website: http://www.mockito.org
+//-----//
+Spring TestContext Framework - version 4.3.0.RELEASE
+Copyright © 2002-2016 the original author or authors.
+Spring Framework is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/spring-projects/spring-framework
+//-----//
+Spring Web - version 4.3.0.RELEASE
+Copyright © 2002-2016 the original author or authors.
+Spring Web is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
+You may download the source code on the following website: https://github.com/spring-projects/spring-framework
+//-----//
+Servlet API - version 2.5
+Copyright © the original author or authors.
+Servlet API is distributed under the terms and conditions of the CDDL and GPLv2 with classpath exception License (https://glassfish.java.net/public/CDDL+GPL.html).
+You may download the source code on the following website: https://glassfish.java.net
+
+
