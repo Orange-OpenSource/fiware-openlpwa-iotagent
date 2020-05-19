@@ -1,0 +1,17 @@
+version: '3.2'
+services:
+  fiware-openlpwa-genericagent:
+    build: .
+    working_dir: /
+    volumes:
+      - .:/fiware-openlpwa-genericagent
+      - ~/.m2:/root/.m2
+    environment:
+      - ORION_URL=${ORION_URL:-http://localhost:8082}
+      - LIVEOBJECTS_REST_URL=${LIVEOBJECTS_REST_URL:-https://liveobjects.orange-business.com}
+      - LIVEOBJECTS_APIKEY=${LIVEOBJECTS_APIKEY}
+      - LIVEOBJECTS_MQTT_URI=${LIVEOBJECTS_MQTT_URI:-ws://liveobjects.orange-business.com:80/mqtt}
+      - LIVEOBJECTS_TOPICPATH=${LIVEOBJECTS_TOPICPATH}
+    expose:
+      - 8080
+    command: mvn clean spring-boot:run
