@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Orange
+ * Copyright (C) 2020 Orange
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -12,8 +12,6 @@
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- * * Created by François SUC on 10/04/2020.
  */
 
 package com.orange.fiware.genericagent;
@@ -70,12 +68,9 @@ public class GenericOpenLpwaNgsiConverter implements OpenLpwaNgsiConverter {
 
         // Name
         if (!incomingMessage.getTags().isEmpty()) {
-            ContextAttribute name = new ContextAttribute(
-                    "name",
-                    "Text",
-                    incomingMessage.getTags().get(0));
-        contextAttributeList.add(name);
-    }
+            ContextAttribute name = new ContextAttribute("name", "Text", incomingMessage.getTags().get(0));
+            contextAttributeList.add(name);
+        }
 
 
         // --- VALUES DATA ---
@@ -85,18 +80,19 @@ public class GenericOpenLpwaNgsiConverter implements OpenLpwaNgsiConverter {
             Object value = entry.getValue();
             String valueType = null;
 
-            if (value instanceof Integer)
+            if (value instanceof Integer) {
                 valueType = "Integer";
-            else if (value instanceof Double) {
+            } else if (value instanceof Double) {
                 valueType = "Integer";
-                value = ((Double) value).intValue() ;
-            }
-            else if (value instanceof String)
+                value = ((Double) value).intValue();
+            } else if (value instanceof String) {
                 valueType = "Text";
-            else if (value instanceof Boolean)
+            } else if (value instanceof Boolean) {
                 valueType = "Boolean";
-            else
+            } else {
                 logger.debug("Unsupported value type for value: " + key + "=" + value);
+                continue;
+            }
             contextAttributeList.add(new ContextAttribute(key, valueType, value));
         }
 
