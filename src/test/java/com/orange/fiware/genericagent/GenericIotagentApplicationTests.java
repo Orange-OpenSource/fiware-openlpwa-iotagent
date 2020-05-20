@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2016 Orange
+ * Copyright (C) 2020 Orange
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * * Created by François SUC on 10/04/2020.
  */
 
 package com.orange.fiware.genericagent;
@@ -36,7 +35,7 @@ import java.util.HashMap;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 
-class StadeIotagentApplicationTests {
+class GenericIotagentApplicationTests {
 
     @Mock
     OpenLpwaMqttProviderCallback clientCallback;
