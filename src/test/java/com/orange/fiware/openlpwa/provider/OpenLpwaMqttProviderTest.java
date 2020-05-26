@@ -281,7 +281,7 @@ public class OpenLpwaMqttProviderTest {
 
     @Test
     public void testMqttNewMessageArrived() throws Exception {
-        String jsonPayload = "{\"streamId\":\"urn:lora:testMQTTdevice!uplink\",\"timestamp\":\"2016-05-23T13:05:18.307Z\",\"model\":\"lora_v0\",\"value\":{\"port\":1,\"fcnt\":8,\"signalLevel\":2,\"payload\":\"ae2109000cf3\"},\"tags\":[\"Lyon\",\"Test\"],\"metadata\":{\"source\":\"urn:lora:testMQTTdevice\"}}";
+        String jsonPayload = "{\"streamId\":\"testMQTTdevice!uplink\",\"timestamp\":\"2016-05-23T13:05:18.307Z\",\"model\":\"lora_v0\",\"value\":{\"port\":1,\"fcnt\":8,\"signalLevel\":2,\"payload\":\"ae2109000cf3\"},\"tags\":[\"Lyon\",\"Test\"],\"metadata\":{\"source\":\"testMQTTdevice\"}}";
 
         doAnswer(new Answer<Void>() {
             @Override
@@ -296,19 +296,16 @@ public class OpenLpwaMqttProviderTest {
                 exception -> fail("Failure callback unexpected call"));
 
         mqttClient.messageArrived(topicPath, new MqttMessage(jsonPayload.getBytes()));
-        verify(clientCallback).newMessageArrived(eq(deviceEUI), argThat(new ArgumentMatcher<DeviceIncomingMessage>() {
-            @Override
-            public boolean matches(Object o) {
-                if (o instanceof DeviceIncomingMessage) {
-                    DeviceIncomingMessage incomingMessage = (DeviceIncomingMessage) o;
-                    return incomingMessage.getStreamId() != null &&
-                            incomingMessage.getDate() != null &&
-                            incomingMessage.getModel() != null &&
-                            incomingMessage.getValue() != null &&
-                            incomingMessage.getTags().size() == 2;
-                }
-                return true;
+        verify(clientCallback).newMessageArrived(eq(deviceEUI), argThat(o -> {
+            if (o instanceof DeviceIncomingMessage) {
+                DeviceIncomingMessage incomingMessage = o;
+                return incomingMessage.getStreamId() != null &&
+                        incomingMessage.getDate() != null &&
+                        incomingMessage.getModel() != null &&
+                        incomingMessage.getValue() != null &&
+                        incomingMessage.getTags().size() == 2;
             }
+            return true;
         }));
     }
 
@@ -316,7 +313,7 @@ public class OpenLpwaMqttProviderTest {
     public void testMqttNewMessageArrivedWithoutCallback() throws Exception {
         mqttClient.setClientCallback(null);
 
-        String jsonPayload = "{\"streamId\":\"urn:lora:testMQTTdevice!uplink\",\"timestamp\":\"2016-05-23T13:05:18.307Z\",\"model\":\"lora_v0\",\"value\":{\"port\":1,\"fcnt\":8,\"signalLevel\":2,\"payload\":\"ae2109000cf3\"},\"tags\":[\"Lyon\",\"Test\"],\"metadata\":{\"source\":\"urn:lora:testMQTTdevice\"}}";
+        String jsonPayload = "{\"streamId\":\"testMQTTdevice!uplink\",\"timestamp\":\"2016-05-23T13:05:18.307Z\",\"model\":\"lora_v0\",\"value\":{\"port\":1,\"fcnt\":8,\"signalLevel\":2,\"payload\":\"ae2109000cf3\"},\"tags\":[\"Lyon\",\"Test\"],\"metadata\":{\"source\":\"testMQTTdevice\"}}";
 
         doAnswer(new Answer<Void>() {
             @Override

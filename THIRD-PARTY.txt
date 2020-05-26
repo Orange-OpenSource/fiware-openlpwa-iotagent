@@ -43,15 +43,10 @@ Copyright © 2000-2015 www.hamcrest.org
 Hamcrest All is distributed under the terms and conditions of the BSD License 3 (https://opensource.org/licenses/BSD-3-Clause)
 You may download the source code on the following website: https://github.com/hamcrest/JavaHamcrest/
 //-----//
-Mockito - version 1.10.19
+Mockito - version 3.3.3
 Copyright © 2007 Mockito contributors
 Mockito is distributed under the terms and conditions of the MIT License (http://opensource.org/licenses/MIT).
 You may download the source code on the following website: http://www.mockito.org
-//-----//
-MongoDB Java Driver - version 2.13.0
-Copyright © 2008-2015 MongoDB, Inc
-MongoDB Java Driver is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
-You may download the source code on the following website: http://www.mongodb.org
 //-----//
 SLF4J API Module - version 1.7.7
 Copyright © 2004-2014 QOS.ch
