@@ -1,3 +1,9 @@
+# 2.0.0
+
+## Major features
+
+* Remove MongoDB
+
 # 1.0.2
 
 ## Minor features
