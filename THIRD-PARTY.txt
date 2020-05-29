@@ -33,7 +33,7 @@ Copyright © 2002-2016 JUnit
 JUnit is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
 You may download the source code on the following website: http://junit.org
 //-----//
-org.eclipse.paho.client.mqttv3 - version 1.1.0
+org.eclipse.paho.client.mqttv3 - version 1.2.4
 Copyright © 2007, Eclipse Foundation, Inc. and its licensors.
 Paho Mqtt V3 is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
 You may download the source code on the following website: http://www.eclipse.org/paho/org.eclipse.paho.client.mqttv3
