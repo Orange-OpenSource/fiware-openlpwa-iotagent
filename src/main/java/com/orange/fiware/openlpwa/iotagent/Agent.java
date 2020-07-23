@@ -19,6 +19,7 @@
 package com.orange.fiware.openlpwa.iotagent;
 
 import com.orange.fiware.openlpwa.exception.AgentException;
+import com.orange.fiware.openlpwa.ngsi.NgsiManager;
 import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProvider;
 import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProviderCallback;
 import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
@@ -41,6 +42,8 @@ public class Agent {
     private OpenLpwaMqttProvider openLpwaMqttProvider;
     @Autowired
     private AgentMqttProviderCallback mqttClientCallback;
+    @Autowired
+    private NgsiManager ngsiManager;
     private OpenLpwaNgsiConverter converter;
     private AgentConnectionLostCallback connectionLostCallback;
     private boolean reconnecting = false;
@@ -182,6 +185,11 @@ public class Agent {
 
             if (converter != null) {
                 List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
+                try {
+                    ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes);
+                } catch (AgentException e) {
+                    logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
+                }
             } else {
                 logger.error("Converter is not defined, message is not treated. (ID:{}, message:{})", deviceID, incomingMessage);
             }
