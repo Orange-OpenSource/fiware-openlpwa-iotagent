@@ -174,4 +174,17 @@ public class DeviceIncomingMessage {
             this.provider = provider;
         }
     }
+
+    @Override
+    public String toString() {
+        return "DeviceIncomingMessage{" +
+                "streamId='" + streamId + '\'' +
+                ", date=" + date +
+                ", model='" + model + '\'' +
+                ", tags=" + tags +
+                ", location=" + location +
+                ", metadata=" + metadata +
+                ", value=" + value +
+                '}';
+    }
 }
