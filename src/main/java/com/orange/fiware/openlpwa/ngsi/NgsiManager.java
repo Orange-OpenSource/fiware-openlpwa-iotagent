@@ -110,7 +110,7 @@ public class NgsiManager {
         element.setContextAttributeList(attributeList);
         elementList.add(element);
         context.setContextElements(elementList);
-        logger.debug("Call updateContext (deviceID:{}, context:{}, list:{})", deviceID, context, attributeList);
+        logger.info("Sending an update request to the context broker (deviceID:{}, context:{}, list:{})", deviceID, context, attributeList);
         return ngsiClient.updateContext(contextBrokerRemoteUrl, remoteHeaders(), context);
     }
 

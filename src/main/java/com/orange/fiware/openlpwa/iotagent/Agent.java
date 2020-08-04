@@ -59,7 +59,7 @@ public class Agent {
      * @param failureCallback   Callback called when an error occurs
      */
     public void start(OpenLpwaNgsiConverter converter, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
-        logger.debug("Starting the agent");
+        logger.info("Starting the agent");
         if (converter != null) {
             this.converter = converter;
         } else {
@@ -71,15 +71,15 @@ public class Agent {
         openLpwaMqttProvider.setClientCallback(mqttClientCallback);
 
         // Connect to the Mqtt broker
-        logger.debug("Connecting to the Mqtt broker");
+        logger.info("Connecting to the Mqtt broker");
         openLpwaMqttProvider.connect(
                 connectedClientId -> {
-                    logger.debug("Connected to the Mqtt broker");
+                    logger.info("Connected to the Mqtt broker");
                     // Subscribe to the Mqtt topic
-                    logger.debug("Subscribing to the Mqtt topic");
+                    logger.info("Subscribing to the Mqtt topic");
                     openLpwaMqttProvider.subscribe(
                             subscribedClientId -> {
-                                logger.debug("Subscribed to the Mqtt topic");
+                                logger.info("Subscribed to the Mqtt topic");
                                 launchSuccessCallback(successCallback);
                             },
                             ex -> {
@@ -105,7 +105,7 @@ public class Agent {
         // Disconnect from the Mqtt broker
         openLpwaMqttProvider.disconnect(
                 disconnectedClientId -> {
-                    logger.debug("Disconnected from the Mqtt broker");
+                    logger.info("Disconnected from the Mqtt broker");
                     launchSuccessCallback(successCallback);
                 },
                 ex -> {
@@ -158,7 +158,7 @@ public class Agent {
                 reconnecting = true;
                 start(converter,
                         () -> {
-                            logger.debug("Reconnected to the MQTT broker");
+                            logger.info("Reconnected to the MQTT broker");
                             reconnecting = false;
                         },
                         ex -> {

@@ -229,6 +229,7 @@ public class OpenLpwaMqttProvider implements MqttCallback {
             try {
                 incomingMessage = new ObjectMapper().readValue(mqttMessage.getPayload(), DeviceIncomingMessage.class);
                 if (incomingMessage != null) {
+                    logger.info("New message arrived: incomingMessage{}", incomingMessage.toString());
                     // Retrieve the deviceID from the source metadata
                     String source = incomingMessage.getMetadata().getSource();
                     if (source != null) {
