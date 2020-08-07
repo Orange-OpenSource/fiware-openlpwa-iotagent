@@ -1,25 +1,24 @@
 /**
  * Copyright (C) 2016 Orange
- *
+ * <p>
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
- *
- *          http://www.apache.org/licenses/LICENSE-2.0
- *
+ * <p>
+ * http://www.apache.org/licenses/LICENSE-2.0
+ * <p>
  * Unless required by applicable law or agreed to in writing, software
  * distributed under the License is distributed on an "AS IS" BASIS,
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
+ * <p>
  * * Created by Christophe AZEMAR on 28/06/2016.
  */
 
 package com.orange.fiware.openlpwa.ngsi;
 
 import com.orange.fiware.openlpwa.exception.AgentException;
-import com.orange.fiware.openlpwa.iotagent.Device;
 import com.orange.ngsi.client.NgsiClient;
 import com.orange.ngsi.model.*;
 import org.slf4j.Logger;
@@ -29,12 +28,22 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
+import java.net.http.HttpRequest.BodyPublishers;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.net.URLEncoder;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
+import java.time.Duration;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
+
+import static java.util.jar.Attributes.Name.CONTENT_TYPE;
 
 /**
  * Manage Ngsi operations
@@ -53,6 +62,17 @@ public class NgsiManager {
     private String contextBrokerRemoteUrl;
     @Value("${contextBroker.remoteAuthToken}")
     private String contextBrokerRemoteAuthToken;
+    @Value("${contextBroker.remoteAuthTokenURL}")
+    private String contextBrokerRemoteAuthTokenURL;
+    @Value("${contextBroker.remoteClientId}")
+    private String contextBrokerRemoteClientId;
+    @Value("${contextBroker.remoteClientSecret}")
+    private String contextBrokerRemoteClientSecret;
+    @Value("${contextBroker.remoteUserLogin}")
+    private String contextBrokerRemoteUserLogin;
+    @Value("${contextBroker.remoteUserPassword}")
+    private String contextBrokerRemoteUserPassword;
+
     @Value("${contextBroker.remoteFiwareService}")
     private String contextBrokerRemoteFiwareService;
     @Value("${contextBroker.remoteFiwareServicePath}")
@@ -63,6 +83,7 @@ public class NgsiManager {
 
     /**
      * Updates a subscription
+     *
      * @param subscriptionId Subscription identifier
      * @return A future for a UpdateContextSubscriptionResponse
      * @throws AgentException when the subscriptionId is null
@@ -81,6 +102,7 @@ public class NgsiManager {
 
     /**
      * Unsubcribes a device
+     *
      * @param subscriptionId Subscription identifier
      * @return A future for a UnsubscribeContextResponse
      * @throws AgentException when the subscriptionId is null
@@ -96,7 +118,8 @@ public class NgsiManager {
 
     /**
      * Updates device attributes sending an updateContext request to the context broker with the deviceID
-     * @param deviceID Device identifier
+     *
+     * @param deviceID      Device identifier
      * @param attributeList Attributes to update
      * @return A future for UpdateContextResponse
      * @throws AgentException when the deviceID is null or where there isn't an attribute to update
@@ -116,6 +139,7 @@ public class NgsiManager {
 
     /**
      * Generates headers for Context Broker
+     *
      * @return Http headers for provided configuration
      */
     private HttpHeaders remoteHeaders() {
@@ -133,5 +157,56 @@ public class NgsiManager {
         httpHeaders.set("Content-Type", "application/json");
 
         return httpHeaders;
+    }
+
+
+
+    public void accessToken() throws ExecutionException, InterruptedException {
+        String encoding = Base64.getEncoder().encodeToString((contextBrokerRemoteClientId + ":" + contextBrokerRemoteClientSecret).getBytes(StandardCharsets.UTF_8));
+        HashMap<String, String> parameters = new HashMap<>();
+        parameters.put("grant_type", "password");
+        parameters.put("username", contextBrokerRemoteUserLogin);
+        parameters.put("password", contextBrokerRemoteUserPassword);
+
+        String form = parameters.entrySet()
+                .stream()
+                .map(entry -> entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
+                .collect(Collectors.joining("&"));
+
+        HttpRequest request = HttpRequest.newBuilder()
+                .uri(URI.create(contextBrokerRemoteAuthTokenURL))
+                .timeout(Duration.ofSeconds(10))
+                .header("Content-Type", "application/x-www-form-urlencoded")
+                .header("Authorization", "Basic " + encoding)
+                .POST(BodyPublishers.ofString(form))
+                .build();
+
+        HttpClient client = HttpClient.newBuilder()
+                .connectTimeout(Duration.ofSeconds(10))
+                .build();
+
+        CompletableFuture<HttpResponse<String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+        String result = response.thenApply(HttpResponse::body).get();
+        System.out.println(result);
+
+//        try {
+//            HttpUriRequest request = RequestBuilder.post()
+//                    .setUri(contextBrokerRemoteAuthTokenURL)
+//                    .setHeader("Content-Type", "application/x-www-form-urlencoded")
+//                    .setHeader("Authorization", "Basic " + encoding)
+//                    .addParameter("grant_type", "password")
+//                    .addParameter("username", contextBrokerRemoteUserLogin)
+//                    .addParameter("password", contextBrokerRemoteUserPassword)
+//                    .build();
+//
+//            HttpClient client = HttpClientBuilder.create().build();
+//            HttpResponse response = client.execute(request);
+//            HttpEntity entity = response.getEntity();
+//
+//            System.out.println(EntityUtils.toString(entity));
+//
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
     }
 }
