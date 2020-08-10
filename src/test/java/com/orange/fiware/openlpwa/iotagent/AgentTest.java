@@ -181,7 +181,7 @@ public class AgentTest {
 
     private void simulateMqttConnectionSuccess() {
         doAnswer(invocationOnMock -> {
-            SuccessCallback<String> originalArgument = invocationOnMock.getArgumentAt(0, SuccessCallback.class);
+            SuccessCallback<String> originalArgument = invocationOnMock.getArgument(0, SuccessCallback.class);
             originalArgument.onSuccess("connectedClientId");
             return null;
         }).when(mockOpenLpwaMqttProvider).connect(Matchers.any(), any(FailureCallback.class));
@@ -189,7 +189,7 @@ public class AgentTest {
 
     private void simulateMqttConnectionFailure() {
         doAnswer(invocationOnMock -> {
-            FailureCallback originalArgument = invocationOnMock.getArgumentAt(1, FailureCallback.class);
+            FailureCallback originalArgument = invocationOnMock.getArgument(1, FailureCallback.class);
 
             originalArgument.onFailure(new Exception("simulateMqttConnectionFailure"));
             return null;
@@ -198,7 +198,7 @@ public class AgentTest {
 
     private void simulateMqttDisconnectionSuccess() {
         doAnswer(invocationOnMock -> {
-            SuccessCallback<String> originalArgument = invocationOnMock.getArgumentAt(0, SuccessCallback.class);
+            SuccessCallback<String> originalArgument = invocationOnMock.getArgument(0, SuccessCallback.class);
             originalArgument.onSuccess("disconnectedClientId");
             return null;
         }).when(mockOpenLpwaMqttProvider).disconnect(Matchers.any(), any(FailureCallback.class));
@@ -206,7 +206,7 @@ public class AgentTest {
 
     private void simulateMqttDisconnectionFailure() {
         doAnswer(invocationOnMock -> {
-            FailureCallback originalArgument = invocationOnMock.getArgumentAt(1, FailureCallback.class);
+            FailureCallback originalArgument = invocationOnMock.getArgument(1, FailureCallback.class);
             originalArgument.onFailure(new Exception("simulateMqttDisconnectionFailure"));
             return null;
         }).when(mockOpenLpwaMqttProvider).disconnect(Matchers.any(), any(FailureCallback.class));
@@ -214,7 +214,7 @@ public class AgentTest {
 
     private void simulateMqttSubscriptionSuccess() {
         doAnswer(invocationOnMock -> {
-            SuccessCallback<String> originalArgument = invocationOnMock.getArgumentAt(0, SuccessCallback.class);
+            SuccessCallback<String> originalArgument = invocationOnMock.getArgument(0, SuccessCallback.class);
             originalArgument.onSuccess("subscribedClientId");
             return null;
         }).when(mockOpenLpwaMqttProvider).subscribe(Matchers.any(), any(FailureCallback.class));
@@ -222,7 +222,7 @@ public class AgentTest {
 
     private void simulateMqttSubscriptionFailure() {
         doAnswer(invocationOnMock -> {
-            FailureCallback originalArgument = invocationOnMock.getArgumentAt(1, FailureCallback.class);
+            FailureCallback originalArgument = invocationOnMock.getArgument(1, FailureCallback.class);
             originalArgument.onFailure(new Exception("simulateMqttSubscriptionFailure"));
             return null;
         }).when(mockOpenLpwaMqttProvider).subscribe(Matchers.any(), any(FailureCallback.class));
