@@ -33,7 +33,7 @@ Copyright © 2002-2016 JUnit
 JUnit is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
 You may download the source code on the following website: http://junit.org
 //-----//
-org.eclipse.paho.client.mqttv3 - version 1.1.0
+org.eclipse.paho.client.mqttv3 - version 1.2.4
 Copyright © 2007, Eclipse Foundation, Inc. and its licensors.
 Paho Mqtt V3 is distributed under the terms and conditions of the Eclipse Public License 1.0 (https://www.eclipse.org/legal/epl-v10.html).
 You may download the source code on the following website: http://www.eclipse.org/paho/org.eclipse.paho.client.mqttv3
@@ -43,15 +43,10 @@ Copyright © 2000-2015 www.hamcrest.org
 Hamcrest All is distributed under the terms and conditions of the BSD License 3 (https://opensource.org/licenses/BSD-3-Clause)
 You may download the source code on the following website: https://github.com/hamcrest/JavaHamcrest/
 //-----//
-Mockito - version 1.10.19
+Mockito - version 3.3.3
 Copyright © 2007 Mockito contributors
 Mockito is distributed under the terms and conditions of the MIT License (http://opensource.org/licenses/MIT).
 You may download the source code on the following website: http://www.mockito.org
-//-----//
-MongoDB Java Driver - version 2.13.0
-Copyright © 2008-2015 MongoDB, Inc
-MongoDB Java Driver is distributed under the terms and conditions of the Apache Software License 2.0 (http://www.apache.org/licenses/LICENSE-2.0).
-You may download the source code on the following website: http://www.mongodb.org
 //-----//
 SLF4J API Module - version 1.7.7
 Copyright © 2004-2014 QOS.ch

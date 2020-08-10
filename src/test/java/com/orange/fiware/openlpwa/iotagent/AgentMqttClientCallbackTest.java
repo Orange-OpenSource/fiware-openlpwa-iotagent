@@ -83,3 +83,4 @@ public class AgentMqttClientCallbackTest {
         verify(agent, times(1)).start(any(OpenLpwaNgsiConverter.class), any(AgentSuccessCallback.class), any(AgentFailureCallback.class));
     }
 }
+

@@ -190,6 +190,7 @@ public class AgentTest {
     private void simulateMqttConnectionFailure() {
         doAnswer(invocationOnMock -> {
             FailureCallback originalArgument = invocationOnMock.getArgumentAt(1, FailureCallback.class);
+
             originalArgument.onFailure(new Exception("simulateMqttConnectionFailure"));
             return null;
         }).when(mockOpenLpwaMqttProvider).connect(Matchers.any(), any(FailureCallback.class));
@@ -227,3 +228,4 @@ public class AgentTest {
         }).when(mockOpenLpwaMqttProvider).subscribe(Matchers.any(), any(FailureCallback.class));
     }
 }
+

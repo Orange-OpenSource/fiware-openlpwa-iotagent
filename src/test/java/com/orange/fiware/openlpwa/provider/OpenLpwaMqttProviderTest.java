@@ -296,19 +296,16 @@ public class OpenLpwaMqttProviderTest {
                 exception -> fail("Failure callback unexpected call"));
 
         mqttClient.messageArrived(topicPath, new MqttMessage(jsonPayload.getBytes()));
-        verify(clientCallback).newMessageArrived(eq(deviceEUI), argThat(new ArgumentMatcher<DeviceIncomingMessage>() {
-            @Override
-            public boolean matches(Object o) {
-                if (o instanceof DeviceIncomingMessage) {
-                    DeviceIncomingMessage incomingMessage = (DeviceIncomingMessage) o;
-                    return incomingMessage.getStreamId() != null &&
-                            incomingMessage.getDate() != null &&
-                            incomingMessage.getModel() != null &&
-                            incomingMessage.getValue() != null &&
-                            incomingMessage.getTags().size() == 2;
-                }
-                return true;
+        verify(clientCallback).newMessageArrived(eq(deviceEUI), argThat(o -> {
+            if (o instanceof DeviceIncomingMessage) {
+                DeviceIncomingMessage incomingMessage = o;
+                return incomingMessage.getStreamId() != null &&
+                        incomingMessage.getDate() != null &&
+                        incomingMessage.getModel() != null &&
+                        incomingMessage.getValue() != null &&
+                        incomingMessage.getTags().size() == 2;
             }
+            return true;
         }));
     }
 
