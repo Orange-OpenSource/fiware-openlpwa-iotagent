@@ -18,9 +18,18 @@
 
 package com.orange.fiware.openlpwa.ngsi;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.orange.fiware.openlpwa.exception.AgentException;
 import com.orange.ngsi.client.NgsiClient;
 import com.orange.ngsi.model.*;
+import org.apache.http.HttpEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpUriRequest;
+import org.apache.http.client.methods.RequestBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,6 +37,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
+
+import java.io.IOException;
 import java.net.http.HttpRequest.BodyPublishers;
 
 import java.net.URI;
@@ -35,15 +46,12 @@ import java.net.URLEncoder;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
-
-import static java.util.jar.Attributes.Name.CONTENT_TYPE;
 
 /**
  * Manage Ngsi operations
@@ -62,8 +70,8 @@ public class NgsiManager {
     private String contextBrokerRemoteUrl;
     @Value("${contextBroker.remoteAuthToken}")
     private String contextBrokerRemoteAuthToken;
-    @Value("${contextBroker.remoteAuthTokenURL}")
-    private String contextBrokerRemoteAuthTokenURL;
+    @Value("${contextBroker.remoteAuthTokenURI}")
+    private String contextBrokerRemoteAuthTokenURI;
     @Value("${contextBroker.remoteClientId}")
     private String contextBrokerRemoteClientId;
     @Value("${contextBroker.remoteClientSecret}")
@@ -144,6 +152,8 @@ public class NgsiManager {
      */
     private HttpHeaders remoteHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
+
+        setAccessTokenSync();
         if (contextBrokerRemoteAuthToken != null) {
             httpHeaders.set("X-Auth-Token", contextBrokerRemoteAuthToken);
         }
@@ -158,55 +168,48 @@ public class NgsiManager {
 
         return httpHeaders;
     }
+    
+    public void setAccessTokenSync() {
 
+        if (contextBrokerRemoteClientId == null || contextBrokerRemoteClientSecret == null ||
+                contextBrokerRemoteUserLogin == null || contextBrokerRemoteUserPassword == null) {
+            return;
+        }
 
-
-    public void accessToken() throws ExecutionException, InterruptedException {
         String encoding = Base64.getEncoder().encodeToString((contextBrokerRemoteClientId + ":" + contextBrokerRemoteClientSecret).getBytes(StandardCharsets.UTF_8));
-        HashMap<String, String> parameters = new HashMap<>();
-        parameters.put("grant_type", "password");
-        parameters.put("username", contextBrokerRemoteUserLogin);
-        parameters.put("password", contextBrokerRemoteUserPassword);
+        try {
+            HttpUriRequest request = RequestBuilder.post()
+                    .setUri(contextBrokerRemoteAuthTokenURI)
+                    .setHeader("Content-Type", "application/x-www-form-urlencoded")
+                    .setHeader("Authorization", "Basic " + encoding)
+                    .addParameter("grant_type", "password")
+                    .addParameter("username", contextBrokerRemoteUserLogin)
+                    .addParameter("password", contextBrokerRemoteUserPassword)
+                    .build();
 
-        String form = parameters.entrySet()
-                .stream()
-                .map(entry -> entry.getKey() + "=" + URLEncoder.encode(entry.getValue(), StandardCharsets.UTF_8))
-                .collect(Collectors.joining("&"));
+            CloseableHttpClient client = HttpClientBuilder.create().build();
+            CloseableHttpResponse response = client.execute(request);
+            HttpEntity entity = response.getEntity();
 
-        HttpRequest request = HttpRequest.newBuilder()
-                .uri(URI.create(contextBrokerRemoteAuthTokenURL))
-                .timeout(Duration.ofSeconds(10))
-                .header("Content-Type", "application/x-www-form-urlencoded")
-                .header("Authorization", "Basic " + encoding)
-                .POST(BodyPublishers.ofString(form))
-                .build();
+            if (response.getStatusLine().getStatusCode() != 200) {
+                logger.error("Unable to retrieve token: status{}. Please check your credentials.", response.getStatusLine());
+                response.getStatusLine().getReasonPhrase();
+            } else {
+                this.contextBrokerRemoteAuthToken = tokenParsing(EntityUtils.toString(entity)).getAccess_token();
+                logger.info("Token successfully recovered");
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
-        HttpClient client = HttpClient.newBuilder()
-                .connectTimeout(Duration.ofSeconds(10))
-                .build();
-
-        CompletableFuture<HttpResponse<String>> response = client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
-        String result = response.thenApply(HttpResponse::body).get();
-        System.out.println(result);
-
-//        try {
-//            HttpUriRequest request = RequestBuilder.post()
-//                    .setUri(contextBrokerRemoteAuthTokenURL)
-//                    .setHeader("Content-Type", "application/x-www-form-urlencoded")
-//                    .setHeader("Authorization", "Basic " + encoding)
-//                    .addParameter("grant_type", "password")
-//                    .addParameter("username", contextBrokerRemoteUserLogin)
-//                    .addParameter("password", contextBrokerRemoteUserPassword)
-//                    .build();
-//
-//            HttpClient client = HttpClientBuilder.create().build();
-//            HttpResponse response = client.execute(request);
-//            HttpEntity entity = response.getEntity();
-//
-//            System.out.println(EntityUtils.toString(entity));
-//
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+    private TokenResponse tokenParsing(String tokenJsonReponse) {
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            return mapper.readValue(tokenJsonReponse, TokenResponse.class);
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }
