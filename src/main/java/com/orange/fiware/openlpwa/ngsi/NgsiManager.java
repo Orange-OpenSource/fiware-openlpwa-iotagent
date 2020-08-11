@@ -39,19 +39,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.concurrent.ListenableFuture;
 
 import java.io.IOException;
-import java.net.http.HttpRequest.BodyPublishers;
-
-import java.net.URI;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
-import java.time.Duration;
-import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.List;
 
 /**
  * Manage Ngsi operations
@@ -193,13 +184,12 @@ public class NgsiManager {
 
             if (response.getStatusLine().getStatusCode() != 200) {
                 logger.error("Unable to retrieve token: status{}. Please check your credentials.", response.getStatusLine());
-                response.getStatusLine().getReasonPhrase();
             } else {
                 this.contextBrokerRemoteAuthToken = tokenParsing(EntityUtils.toString(entity)).getAccess_token();
                 logger.info("Token successfully recovered");
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while retrieving the token. error{}", e.getMessage());
         }
     }
 
@@ -208,7 +198,7 @@ public class NgsiManager {
             ObjectMapper mapper = new ObjectMapper();
             return mapper.readValue(tokenJsonReponse, TokenResponse.class);
         } catch (JsonProcessingException e) {
-            e.printStackTrace();
+            logger.error("An error occurred while parsing the token. error{}", e.getMessage());
         }
         return null;
     }
