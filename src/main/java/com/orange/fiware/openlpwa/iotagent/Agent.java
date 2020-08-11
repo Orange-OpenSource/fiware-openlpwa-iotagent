@@ -193,8 +193,23 @@ public class Agent {
                 List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
                 try {
                     ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
-                            updateContextResponse -> System.out.println(updateContextResponse.toString()),
-                            ex -> logger.error("An error occurred while sending the message: error{}", ex.getMessage()));
+                            updateContextResponse -> {
+                                if (updateContextResponse != null && updateContextResponse.getErrorCode().getCode().equals("200")) {
+                                    logger.info("Message sent successfully.");
+                                }
+                            },
+                            ex -> {
+                                logger.error("An error occurred while sending the message: error{}", ex.getMessage());
+                                if (ex.getMessage().contains("401")) {
+                                    logger.info("Try sending the message again with an updated token.");
+                                    try {
+                                        ngsiManager.setAccessTokenSync();
+                                        ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes);
+                                    } catch (AgentException e) {
+                                        logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
+                                    }
+                                }
+                            });
                 } catch (AgentException e) {
                     logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
                 }
