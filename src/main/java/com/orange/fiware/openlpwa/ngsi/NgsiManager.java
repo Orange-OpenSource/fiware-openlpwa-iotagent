@@ -144,7 +144,10 @@ public class NgsiManager {
     private HttpHeaders remoteHeaders() {
         HttpHeaders httpHeaders = new HttpHeaders();
 
-        setAccessTokenSync();
+
+        if (contextBrokerRemoteAuthToken == null) {
+            setAccessTokenSync();
+        }
         if (contextBrokerRemoteAuthToken != null) {
             httpHeaders.set("X-Auth-Token", contextBrokerRemoteAuthToken);
         }

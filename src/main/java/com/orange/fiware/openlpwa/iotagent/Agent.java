@@ -24,6 +24,8 @@ import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProvider;
 import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProviderCallback;
 import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
 import com.orange.ngsi.model.ContextAttribute;
+import com.orange.ngsi.model.UpdateContextResponse;
+import org.apache.http.concurrent.FutureCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,9 +56,10 @@ public class Agent {
 
     /**
      * Start the IoT agent
-     * @param converter converter
-     * @param successCallback   Callback called when the agent is correctly started
-     * @param failureCallback   Callback called when an error occurs
+     *
+     * @param converter       converter
+     * @param successCallback Callback called when the agent is correctly started
+     * @param failureCallback Callback called when an error occurs
      */
     public void start(OpenLpwaNgsiConverter converter, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
         logger.info("Starting the agent");
@@ -98,8 +101,9 @@ public class Agent {
 
     /**
      * Stop the IoT agent
-     * @param successCallback   Callback called when the agent is correctly stopped
-     * @param failureCallback   Callback called when an error occurs
+     *
+     * @param successCallback Callback called when the agent is correctly stopped
+     * @param failureCallback Callback called when an error occurs
      */
     public void stop(AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
         // Disconnect from the Mqtt broker
@@ -118,7 +122,8 @@ public class Agent {
 
     /**
      * Launch a AgentSuccessCallback if not null
-     * @param successCallback   AgentSuccessCallback to launch
+     *
+     * @param successCallback AgentSuccessCallback to launch
      */
     private void launchSuccessCallback(AgentSuccessCallback successCallback) {
         if (successCallback != null) {
@@ -128,8 +133,9 @@ public class Agent {
 
     /**
      * Launch a AgentFailureCallback if not null
-     * @param failureCallback   AgentFailureCallback to launch
-     * @param exception         AgentException
+     *
+     * @param failureCallback AgentFailureCallback to launch
+     * @param exception       AgentException
      */
     private void launchFailureCallback(AgentFailureCallback failureCallback, AgentException exception) {
         if (failureCallback != null) {
@@ -186,7 +192,9 @@ public class Agent {
             if (converter != null) {
                 List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
                 try {
-                    ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes);
+                    ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
+                            updateContextResponse -> System.out.println(updateContextResponse.toString()),
+                            ex -> logger.error("An error occurred while sending the message: error{}", ex.getMessage()));
                 } catch (AgentException e) {
                     logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
                 }
