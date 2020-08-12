@@ -204,7 +204,13 @@ public class Agent {
                                     logger.info("Try sending the message again with an updated token.");
                                     try {
                                         ngsiManager.setAccessTokenSync();
-                                        ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes);
+                                        ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
+                                                updateContextResponse -> {
+                                                    if (updateContextResponse != null && updateContextResponse.getErrorCode().getCode().equals("200")) {
+                                                        logger.info("Message sent successfully.");
+                                                    }
+                                                },
+                                                e -> logger.error("An error occurred while sending the message: error{}", e.getMessage()));
                                     } catch (AgentException e) {
                                         logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
                                     }
