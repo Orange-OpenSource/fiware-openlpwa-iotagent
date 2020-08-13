@@ -197,7 +197,7 @@ public class Agent {
                                 if (updateContextResponse == null) {
                                     logger.error("No response received.");
                                 } else {
-                                    logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
+                                    logger.info("Message sent successfully: reponse{}", updateContextResponse.getErrorCode().toString());
                                 }
                             },
                             ex -> {
@@ -211,7 +211,7 @@ public class Agent {
                                                     if (updateContextResponse == null) {
                                                         logger.error("No response received.");
                                                     } else {
-                                                        logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
+                                                        logger.info("Message sent successfully: reponse{}", updateContextResponse.getErrorCode().toString());
                                                     }
                                                 },
                                                 e -> logger.error("An error occurred while sending the message: error{}", e.getMessage()));
