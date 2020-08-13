@@ -194,7 +194,9 @@ public class Agent {
                 try {
                     ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
                             updateContextResponse -> {
-                                if (updateContextResponse != null && updateContextResponse.getErrorCode().getCode().equals("200")) {
+                                if (updateContextResponse == null) {
+                                    logger.error("No response received.");
+                                } else {
                                     logger.info("Message sent successfully.");
                                 }
                             },
