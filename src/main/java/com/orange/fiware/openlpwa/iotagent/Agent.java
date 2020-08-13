@@ -197,7 +197,7 @@ public class Agent {
                                 if (updateContextResponse == null) {
                                     logger.error("No response received.");
                                 } else {
-                                    logger.info("Message sent successfully.");
+                                    logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
                                 }
                             },
                             ex -> {
