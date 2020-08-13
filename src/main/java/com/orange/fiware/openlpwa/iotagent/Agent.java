@@ -208,8 +208,10 @@ public class Agent {
                                         ngsiManager.setAccessTokenSync();
                                         ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
                                                 updateContextResponse -> {
-                                                    if (updateContextResponse != null && updateContextResponse.getErrorCode().getCode().equals("200")) {
-                                                        logger.info("Message sent successfully.");
+                                                    if (updateContextResponse == null) {
+                                                        logger.error("No response received.");
+                                                    } else {
+                                                        logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
                                                     }
                                                 },
                                                 e -> logger.error("An error occurred while sending the message: error{}", e.getMessage()));
