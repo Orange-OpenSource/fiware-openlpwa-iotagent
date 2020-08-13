@@ -309,6 +309,7 @@ public class OpenLpwaMqttProviderTest {
         }));
     }
 
+
     @Test
     public void testMqttNewMessageArrivedWithoutCallback() throws Exception {
         mqttClient.setClientCallback(null);

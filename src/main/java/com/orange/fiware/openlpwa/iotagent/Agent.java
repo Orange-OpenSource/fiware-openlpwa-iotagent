@@ -19,10 +19,13 @@
 package com.orange.fiware.openlpwa.iotagent;
 
 import com.orange.fiware.openlpwa.exception.AgentException;
+import com.orange.fiware.openlpwa.ngsi.NgsiManager;
 import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProvider;
 import com.orange.fiware.openlpwa.provider.OpenLpwaMqttProviderCallback;
 import com.orange.fiware.openlpwa.provider.model.DeviceIncomingMessage;
 import com.orange.ngsi.model.ContextAttribute;
+import com.orange.ngsi.model.UpdateContextResponse;
+import org.apache.http.concurrent.FutureCallback;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +44,8 @@ public class Agent {
     private OpenLpwaMqttProvider openLpwaMqttProvider;
     @Autowired
     private AgentMqttProviderCallback mqttClientCallback;
+    @Autowired
+    private NgsiManager ngsiManager;
     private OpenLpwaNgsiConverter converter;
     private AgentConnectionLostCallback connectionLostCallback;
     private boolean reconnecting = false;
@@ -51,12 +56,13 @@ public class Agent {
 
     /**
      * Start the IoT agent
-     * @param converter converter
-     * @param successCallback   Callback called when the agent is correctly started
-     * @param failureCallback   Callback called when an error occurs
+     *
+     * @param converter       converter
+     * @param successCallback Callback called when the agent is correctly started
+     * @param failureCallback Callback called when an error occurs
      */
     public void start(OpenLpwaNgsiConverter converter, AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
-        logger.debug("Starting the agent");
+        logger.info("Starting the agent");
         if (converter != null) {
             this.converter = converter;
         } else {
@@ -68,15 +74,15 @@ public class Agent {
         openLpwaMqttProvider.setClientCallback(mqttClientCallback);
 
         // Connect to the Mqtt broker
-        logger.debug("Connecting to the Mqtt broker");
+        logger.info("Connecting to the Mqtt broker");
         openLpwaMqttProvider.connect(
                 connectedClientId -> {
-                    logger.debug("Connected to the Mqtt broker");
+                    logger.info("Connected to the Mqtt broker");
                     // Subscribe to the Mqtt topic
-                    logger.debug("Subscribing to the Mqtt topic");
+                    logger.info("Subscribing to the Mqtt topic");
                     openLpwaMqttProvider.subscribe(
                             subscribedClientId -> {
-                                logger.debug("Subscribed to the Mqtt topic");
+                                logger.info("Subscribed to the Mqtt topic");
                                 launchSuccessCallback(successCallback);
                             },
                             ex -> {
@@ -95,14 +101,15 @@ public class Agent {
 
     /**
      * Stop the IoT agent
-     * @param successCallback   Callback called when the agent is correctly stopped
-     * @param failureCallback   Callback called when an error occurs
+     *
+     * @param successCallback Callback called when the agent is correctly stopped
+     * @param failureCallback Callback called when an error occurs
      */
     public void stop(AgentSuccessCallback successCallback, AgentFailureCallback failureCallback) {
         // Disconnect from the Mqtt broker
         openLpwaMqttProvider.disconnect(
                 disconnectedClientId -> {
-                    logger.debug("Disconnected from the Mqtt broker");
+                    logger.info("Disconnected from the Mqtt broker");
                     launchSuccessCallback(successCallback);
                 },
                 ex -> {
@@ -115,7 +122,8 @@ public class Agent {
 
     /**
      * Launch a AgentSuccessCallback if not null
-     * @param successCallback   AgentSuccessCallback to launch
+     *
+     * @param successCallback AgentSuccessCallback to launch
      */
     private void launchSuccessCallback(AgentSuccessCallback successCallback) {
         if (successCallback != null) {
@@ -125,8 +133,9 @@ public class Agent {
 
     /**
      * Launch a AgentFailureCallback if not null
-     * @param failureCallback   AgentFailureCallback to launch
-     * @param exception         AgentException
+     *
+     * @param failureCallback AgentFailureCallback to launch
+     * @param exception       AgentException
      */
     private void launchFailureCallback(AgentFailureCallback failureCallback, AgentException exception) {
         if (failureCallback != null) {
@@ -155,7 +164,7 @@ public class Agent {
                 reconnecting = true;
                 start(converter,
                         () -> {
-                            logger.debug("Reconnected to the MQTT broker");
+                            logger.info("Reconnected to the MQTT broker");
                             reconnecting = false;
                         },
                         ex -> {
@@ -182,6 +191,38 @@ public class Agent {
 
             if (converter != null) {
                 List<ContextAttribute> decodedAttributes = converter.decodeData(deviceID, payload, incomingMessage);
+                try {
+                    ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
+                            updateContextResponse -> {
+                                if (updateContextResponse == null) {
+                                    logger.error("No response received.");
+                                } else {
+                                    logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
+                                }
+                            },
+                            ex -> {
+                                logger.error("An error occurred while sending the message: error{}", ex.getMessage());
+                                if (ex.getMessage().contains("401")) {
+                                    logger.info("Try sending the message again with an updated token.");
+                                    try {
+                                        ngsiManager.setAccessTokenSync();
+                                        ngsiManager.updateDeviceAttributes(deviceID, decodedAttributes).addCallback(
+                                                updateContextResponse -> {
+                                                    if (updateContextResponse == null) {
+                                                        logger.error("No response received.");
+                                                    } else {
+                                                        logger.info("Message sent successfully: reponse{}", updateContextResponse.toString());
+                                                    }
+                                                },
+                                                e -> logger.error("An error occurred while sending the message: error{}", e.getMessage()));
+                                    } catch (AgentException e) {
+                                        logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
+                                    }
+                                }
+                            });
+                } catch (AgentException e) {
+                    logger.error("Unable to treat incoming message (ID:{}, message:{})", deviceID, incomingMessage, e);
+                }
             } else {
                 logger.error("Converter is not defined, message is not treated. (ID:{}, message:{})", deviceID, incomingMessage);
             }

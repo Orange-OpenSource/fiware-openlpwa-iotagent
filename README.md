@@ -58,6 +58,11 @@ This is a list of the application properties:
     <tr><td>contextBroker.remoteFiwareService</td><td>remote broker Service Name</td><td></td></tr>
     <tr><td>contextBroker.remoteFiwareServicePath</td><td>remote broker Service Path</td><td></td></tr>
     <tr><td>contextBroker.remoteAuthToken</td><td>OAuth token for secured remote broker</td><td></td></tr>
+    <tr><td>contextBroker.remoteAuthTokenURI</td><td>Uri used to retrieve the authentication token</td><td></td></tr>
+    <tr><td>contextBroker.remoteClientId</td><td>Remote context broker client ID</td><td></td></tr>
+    <tr><td>contextBroker.remoteClientSecret</td><td>Remote context broker client secret</td><td></td></tr>
+    <tr><td>contextBroker.remoteUserLogin</td><td>Remote context broker user login</td><td></td></tr>
+    <tr><td>contextBroker.remoteUserPassword</td><td>Remote context broker user password</td><td></td></tr>
     <tr><td>openLpwaProvider.restUrl</td><td>Live Objects®** API URL</td><td>https://lpwa.liveobjects.orange-business.com</td></tr>
     <tr><td>openLpwaProvider.apiKey</td><td>Live Objects®** API key</td><td></td></tr>
     <tr><td>openLpwaProvider.mqttUri</td><td>Live Objects®** MQTT broker URI</td><td>tcp://liveobjects.orange-business.com:1883</td></tr>
@@ -107,6 +112,19 @@ The method `decodeData` is called for each uplink payload sent by a device. You 
 ```
 
 The method `encodeDataForCommand` is called for each downlink payload to send to a device (see [Send command to a device](#sendCommand)). You must implement this method to retrieve the command in a NGSI context attribute and to encode the corresponding hexadecimal payload to send to a device.
+
+### Authentication with remote context broker
+
+#### Non-authenticated mode 
+Without a token or credentials filled in, the agent will send messages without trying to authenticate to the remote context broker.
+
+#### Token authentication mode
+With a token filled in, the agent will use this token to authenticate to the remote context broker before sending a message.
+If the token is invalid, the agent will try to use the given credentials to generate a new one.
+
+#### Credentials authentication mode
+If the credentials are filled in, the agent will use them to generate a token from the given URI. 
+As long as this token is valid, the agent will continue to use it. If the token is no longer valid, the agent will try to replace it with a new one, based on the given credentials.
 
 ### Start the agent
 The library provides an `Agent` class to manage the agent. You should just call the `start` method passing 3 parameters:
