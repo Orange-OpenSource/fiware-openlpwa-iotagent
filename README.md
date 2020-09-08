@@ -31,9 +31,12 @@ Inside the directory containing the docker-compose-.yml file ( usually at the ro
 docker-compose build
 ```
 
+Run `docker-compose up` from the location of the `docker-compose.yml` file to starts and runs the entire app.
 
 
-### How to user docker image 
+
+
+### How to use a docker image 
 In order to use the generic fiware agent, you have to fill in the environment variable properties as best you can.
 
 Use this command :
@@ -59,6 +62,7 @@ image
 
 Here is an example using docker-compose.yml:
 
+```
 version: '3.2'
 services:
   fiware-openlpwa-genericagent:
@@ -83,5 +87,13 @@ services:
       - LIVEOBJECTS_TOPICPATH=${LIVEOBJECTS_TOPICPATH}
     expose:
       - 8080
-    command: mvn clean spring-boot:run```
+    command: mvn clean spring-boot:run
+ ```
+
+### How to save a docker image 
+
+You can use gzip to save the image file and make the backup smaller.
+```
+docker save myimage:latest | gzip > myimage_latest.tar.gz
+```
 
