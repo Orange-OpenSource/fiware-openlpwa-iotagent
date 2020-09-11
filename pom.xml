@@ -9,7 +9,7 @@
     </parent>
     <groupId>com.orange.fiware</groupId>
     <artifactId>fiware-openlpwa-genericagent</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
     <name>fiware-openlpwa-genericagent</name>
 
     <properties>
