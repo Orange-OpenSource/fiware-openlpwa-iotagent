@@ -39,7 +39,7 @@ import static org.eclipse.paho.client.mqttv3.MqttConnectOptions.MQTT_VERSION_3_1
 public class OpenLpwaMqttProvider implements MqttCallback {
 
     private static Logger logger = LoggerFactory.getLogger(OpenLpwaMqttProvider.class);
-    private final static String userName = "payload";
+    private final static String userName = "application";
     private final static int subscribeQOS = 1;
     private static String topicPath;
     private String serverUri;
