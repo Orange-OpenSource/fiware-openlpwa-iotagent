@@ -24,6 +24,10 @@ Fiware OpenLpwa Generic Agent does support environment variables. Please configu
 
 ### How to generate a docker image 
 
+⚠️ Before generating a new image from a new version of the generic agent, make sure :
+  - you have made a Maven Install of the new version
+  - you have modified the Dockerfile according to the new version of the generated Jar
+
 In order to generate a docker image, you must use the build command by providing it the Dockerfile.
 
 Inside the directory containing the docker-compose-.yml file ( usually at the root of the project), use the command :
