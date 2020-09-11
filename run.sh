@@ -2,4 +2,4 @@
 
 cat DockerReleaseNote.txt | head -10 | tail -6
 echo
-java -jar "fiware-openlpwa-genericagent-1.0.0.jar"
+java -jar "fiware-openlpwa-genericagent-1.0.1.jar"
