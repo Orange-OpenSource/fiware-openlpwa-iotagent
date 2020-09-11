@@ -6,7 +6,7 @@ DOCKER IMAGE - FIWARE OPENLPWA GENERIC AGENT - RELEASE NOTE
 VERSION 1.0.2
 -------------
 fiware-openlpwa-genericagent: 1.0.1
-fiware-openlpwa-iotagent: 2.0.3-SNAPSHOT
+fiware-openlpwa-iotagent: 2.0.2
 
 -------------
 VERSION 1.0.1
