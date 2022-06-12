@@ -1,10 +1,3 @@
-[Hex.pm](LICENSE)
-[Build Status](https://travis-ci.org/Orange-OpenSource/fiware-openlpwa-iotagent)
-
-
-
-[GitHub issues](https://github.com/Orange-OpenSource/fiware-openlpwa-iotagent/issues)
-
 # Fiware LoRa®* IoT Agent
 This project is a bridge between the Orange LoRa®* network and the OMA NGSIv1 protocol used by the Orion Context Broker as well as by other components of the FIWARE ecosystem.
 
